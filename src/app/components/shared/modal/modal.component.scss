@@ -1,0 +1,36 @@
+:host ::ng-deep .p-dialog {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    font-family: inherit;
+    color: #222;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    :host ::ng-deep .p-dialog {
+      background: #121212;
+      color: #e0e0e0;
+      box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.7);
+    }
+  }
+  
+  :host ::ng-deep .p-dialog-header {
+    font-weight: 600;
+    font-size: 1.25rem;
+    border-bottom: 0.0625rem solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+  
+  :host ::ng-deep .p-dialog-content {
+    padding-top: 1rem;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  @media (max-width: 36rem) {
+    :host ::ng-deep .p-dialog {
+      width: 90vw !important;
+      padding: 0.75rem;
+    }
+  }  
