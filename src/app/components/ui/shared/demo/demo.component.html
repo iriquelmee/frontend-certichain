@@ -1,0 +1,40 @@
+<h1>Demo</h1>
+   <p-card>
+  <div class="grid">
+
+    <div style="margin-top: 1.5rem;" class="container col-12">
+      <h3>Primarios</h3>
+      <div class="grid">
+        <custom-button label="Primary" type="primary" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Success" type="success" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Info" type="info" (onClick)="abrirModal()"></custom-button>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem;" class="container col-12">
+      <h3>Secundarios</h3>
+      <div class="grid">
+        <custom-button label="Secondary" type="secondary" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Warning" type="warning" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Danger" type="danger" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Help" type="help" (onClick)="abrirModal()"></custom-button>
+        <custom-button label="Contrast" type="contrast" (onClick)="abrirModal()"></custom-button>
+      </div>
+    </div>
+    
+  </div>
+</p-card>
+
+<p-card>
+  <div class="grid">
+    <custom-button
+    label="Confirmar Acción"
+    type="warning"
+    (onClick)="abrirConfirmacion($event)">
+  </custom-button>
+  
+  </div>
+</p-card>
+
+<app-modal></app-modal>
+<app-confirmation></app-confirmation> 
