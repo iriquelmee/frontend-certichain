@@ -1,0 +1,33 @@
+@import 'primeicons/primeicons.css';
+
+* {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #28978c;
+  --secondary-color: #28978c;
+  --background-light: #28978c;
+  --text-light: #ffffff;
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-light);
+  min-height: 62.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  :root {
+    --primary-color: #28978c;
+    --secondary-color: #28978c;
+  }
+}
