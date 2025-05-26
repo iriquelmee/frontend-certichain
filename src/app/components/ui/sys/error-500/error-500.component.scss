@@ -1,0 +1,46 @@
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 2rem;
+  
+    ::ng-deep .p-card {
+      background-color: white;
+      color: #222;
+      width: 100%;
+      max-width: 24rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+      text-align: center;
+  
+      .p-card-header {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+  
+      .p-card-body {
+        font-size: 1rem;
+        padding: 1.5rem;
+      }
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .error-container {
+      background-color: #121212;
+      color: #e0e0e0;
+  
+      ::ng-deep .p-card {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+  
+        .p-card-header {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }  
