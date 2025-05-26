@@ -1,0 +1,20 @@
+<div [class.sidebar-open]="isSidebarOpen" class="sidebar-container">
+    <button class="toggle-btn" (click)="isSidebarOpen = !isSidebarOpen">
+        @if(!isSidebarOpen){
+            
+            <i class="pi pi-bars"></i>
+        }
+        @else {
+            <i class="pi pi-chevron-left"></i>
+        }
+        
+    </button>
+
+    @if(isSidebarOpen){
+        <div class="menu-wrapper">
+            <p-card>
+                <p-menu [model]="items"></p-menu>
+            </p-card>
+        </div>
+    }
+</div>
