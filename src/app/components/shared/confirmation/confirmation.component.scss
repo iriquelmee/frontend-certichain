@@ -1,0 +1,39 @@
+::ng-deep .p-toast {
+  .p-toast-message {
+    border-left: 0.4rem solid var(--primary-color);
+    background-color: white;
+    color: #222;
+
+    .p-toast-message-icon,
+    .p-toast-message-text {
+      color: inherit;
+    }
+
+    .p-toast-icon-close {
+      color: inherit;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .p-toast-message {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+  }
+
+  .p-toast-message-info {
+    border-left-color: var(--primary-color);
+  }
+
+  .p-toast-message-warn {
+    border-left-color: #ffb300;
+  }
+
+  .p-toast-message-error {
+    border-left-color: #e53935;
+  }
+
+  .p-toast-message-success {
+    border-left-color: #43a047;
+  }
+}
