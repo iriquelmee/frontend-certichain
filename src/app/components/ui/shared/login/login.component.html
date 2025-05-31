@@ -1,24 +1,17 @@
 <div class="login-container">
   <p-card styleClass="login-card">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <input
-      pInputText
-      id="username"
-      formControlName="username"
-      placeholder="Usuario"
-      autocomplete="username"
-    />
-    
-    <p-password
-      id="password"
-      formControlName="password"
-      [toggleMask]="true"
-      placeholder="Contraseña"
-      autocomplete="current-password"
-    ></p-password>
-    
+    <div class="login-form">
+      <h2>{{ title }}</h2>
+      <p>{{ subtitle }}</p>
 
-      <button pButton label="Ingresar" type="submit" [loading]="loading" class="login-button"></button>
-    </form>
+      @if(errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <button pButton label="Iniciar Sesión" (click)="onLogin()" [loading]="loading" class="login-button">
+      </button>
+    </div>
   </p-card>
 </div>

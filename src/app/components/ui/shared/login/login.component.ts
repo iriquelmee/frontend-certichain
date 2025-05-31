@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,53 +12,32 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     CardModule,
-    InputTextModule,
-    PasswordModule,
     ButtonModule
   ]
 })
 export class LoginComponent {
+  title:string = "Bienvenido a CertiChain";
+  subtitle:string= "Inicia sesión para acceder a la plataforma"
   loading = false;
   errorMessage = '';
 
-  loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
-  });
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  constructor(private router: Router) {}
-
-  get username() {
-    return this.loginForm.get('username');
-  }
-
-  get password() {
-    return this.loginForm.get('password');
-  }
-
-  async onSubmit() {
+  async onLogin() {
     this.errorMessage = '';
-
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Por favor completa los campos correctamente.';
-      return;
-    }
-
     this.loading = true;
 
-    const username = this.username?.value ?? '';
-    const password = this.password?.value ?? '';
-
     try {
-      //const user = await signIn({ username, password });
-      //console.log('Usuario autenticado:', user);
-      this.router.navigate(['/dashboard']);
-    } catch (error: any) {
-      console.error('Error en login:', error);
+      await this.authService.login();
+    } 
+    catch (error: any) {
       this.errorMessage = error.message || 'Error al iniciar sesión.';
-    } finally {
+    } 
+    finally {
       this.loading = false;
     }
   }

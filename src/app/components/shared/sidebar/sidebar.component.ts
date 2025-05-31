@@ -1,85 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { BadgeModule } from 'primeng/badge';
 import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../services/auth/auth.service';
+import { AuthState } from '../../../models/user.model';
+import { sidebarItems } from '../../../../data';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [MenuModule, BadgeModule, RippleModule, AvatarModule, RouterModule, CardModule],
+  imports: [MenuModule, BadgeModule, RippleModule, AvatarModule, RouterModule, CardModule, CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   items: MenuItem[] | undefined;
   isSidebarOpen = false;
-  
+  isAuthenticated = false;
+  private authSubscription?: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
+
   ngOnInit() {
-    this.items = [
-      {
-        label: 'Dashboard',
-        icon: 'pi pi-fw pi-home',
-        routerLink: '/dashboard'
-      },
-      {
-        label: 'Certificados',
-        icon: 'pi pi-fw pi-file',
-        routerLink: '/certificados'
-      },
-      {
-        label: 'Instituciones',
-        icon: 'pi pi-fw pi-building',
-        routerLink: '/instituciones'
-      },
-      {
-        label: 'Usuarios',
-        icon: 'pi pi-fw pi-users',
-        routerLink: '/usuarios'
-      },
-      {
-        label: 'Perfil',
-        icon: 'pi pi-fw pi-user',
-        routerLink: '/perfil'
-      },      
-      {
-        label: 'Demo',
-        icon: 'pi pi-bookmark-fill',
-        routerLink: '/demo'
-      },
-      {
-        separator: true
-      },
-      {
-        label: 'error-400',
-        icon: 'pi pi-fw pi-exclamation-triangle',
-        routerLink: '/error-400'
-      },
-      {
-        label: 'error-500',
-        icon: 'pi pi-fw pi-times',
-        routerLink: '/error-500'
-      },
-      {
-        separator: true
-      },
-      {
+    this.authSubscription = this.authService.authState$.subscribe((authState: AuthState) => {
+      this.isAuthenticated = authState.user?.isAuthenticated || false;
+      this.buildMenuItems();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
+  private buildMenuItems() {
+    this.items = sidebarItems;
+
+    if (this.isAuthenticated) {
+      this.items.push({
+        label: 'Logout',
+        icon: 'pi pi-fw pi-sign-out',
+        command: () => this.logout()
+      });
+    } 
+    else {
+      this.items.push({
         label: 'Login',
         icon: 'pi pi-fw pi-sign-in',
         routerLink: '/login'
-      },
-      {
-        label: 'Logout',
-        icon: 'pi pi-fw pi-sign-out',
-        command: () => {
-          console.log('Cerrando sesión...');
-        }
-      },
+      });
+    }
+  }
 
-    ];
-    
+  private logout() {
+    this.authService.logout();
   }
 }

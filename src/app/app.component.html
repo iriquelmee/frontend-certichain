@@ -1,6 +1,12 @@
-<div class="grid main-content">
-  <app-sidebar></app-sidebar>
-  <p-card>
-    <router-outlet></router-outlet>
-  </p-card>
-</div>
+@if(isAuthenticated){
+  <div class="grid main-content">
+    <app-sidebar></app-sidebar>
+    <p-card>
+      <router-outlet></router-outlet>
+    </p-card>
+  </div>
+}
+
+@if(!isAuthenticated){
+  <router-outlet></router-outlet>
+}

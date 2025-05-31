@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/ui/shared/profile/profile.compone
 import { DemoComponent } from './components/ui/shared/demo/demo.component';
 import { Error400Component } from './components/ui/sys/error-400/error-400.component';
 import { Error500Component } from './components/ui/sys/error-500/error-500.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -22,31 +23,32 @@ export const routes: Routes = [
     {
       path: 'dashboard',
       component: DashboardComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'certificados',
       component: CertificadosComponent,
-  
+      canActivate: [AuthGuard]
     },
     {
       path: 'instituciones',
       component: InstitucionesComponent,
-  
+      canActivate: [AuthGuard]
     },
     {
       path: 'usuarios',
       component: UsuariosComponent,
-  
+      canActivate: [AuthGuard]
     },
     {
       path: 'perfil',
       component: ProfileComponent,
-    
+      canActivate: [AuthGuard]
     },    
     {
       path: 'demo',
       component: DemoComponent,
-    
+      canActivate: [AuthGuard]
     },
     {
       path: 'error-400',
@@ -58,6 +60,6 @@ export const routes: Routes = [
     },
     {
       path: '**',
-      redirectTo: 'dashboard'
+      redirectTo: 'login'
     }
   ];
