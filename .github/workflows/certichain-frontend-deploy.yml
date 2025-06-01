@@ -41,7 +41,7 @@ jobs:
             if [ -d frontend-certichain ]; then
               cd frontend-certichain && git pull
             else
-              git clone https://iriquelmee:${GH_PAT_TOKEN}@github.com/iriquelmee/frontend-certichain.git
+              git clone https://${GH_PAT_TOKEN}@github.com/iriquelmee/frontend-certichain.git
               cd frontend-certichain
             fi
 
