@@ -57,7 +57,7 @@ jobs:
 
             # Verificar certificados SSL
             if [ ! -f /etc/letsencrypt/live/certichain.ddns.net/fullchain.pem ]; then
-              sudo certbot --nginx -d certichain.ddns.net --non-interactive --agree-tos -m tu-correo@example.com
+              sudo certbot certonly --standalone -d certichain.ddns.net
             fi
 
             # Levantar contenedor con SSL
