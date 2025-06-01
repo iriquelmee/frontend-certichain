@@ -1,0 +1,73 @@
+name: Deploy Angular Frontend to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+
+            # Verificar e instalar Docker
+            command -v docker &>/dev/null || (
+              sudo apt update &&
+              sudo apt install -y docker.io &&
+              sudo systemctl enable docker &&
+              sudo usermod -aG docker ubuntu
+            )
+
+            # Verificar Certbot
+            command -v certbot &>/dev/null || sudo apt install -y certbot python3-certbot-nginx
+
+            # Detener nginx en host si corre (no lo usamos)
+            sudo systemctl stop nginx || true
+
+            # Clonar o actualizar proyecto
+            cd /home/ubuntu
+            if [ -d frontend-certichain ]; then
+              cd frontend-certichain && git pull
+            else
+              git clone https://iriquelmee:${GH_PAT_TOKEN}@github.com/iriquelmee/frontend-certichain.git
+              cd frontend-certichain
+            fi
+
+            # Construir imagen
+            docker build -t certichain-front .
+
+            # Detener y eliminar contenedor si existe
+            if [ "$(docker ps -q -f name=nginx-ssl)" ]; then
+              docker stop nginx-ssl && docker rm nginx-ssl
+            elif [ "$(docker ps -a -q -f name=nginx-ssl)" ]; then
+              docker rm nginx-ssl
+            fi
+
+            # Verificar certificados SSL
+            if [ ! -f /etc/letsencrypt/live/certichain.ddns.net/fullchain.pem ]; then
+              sudo certbot --nginx -d certichain.ddns.net --non-interactive --agree-tos -m tu-correo@example.com
+            fi
+
+            # Levantar contenedor con SSL
+            docker run -d \
+              --name nginx-ssl \
+              -p 80:80 \
+              -p 443:443 \
+              -v /etc/letsencrypt/live/certichain.ddns.net/fullchain.pem:/etc/nginx/certificates/fullchain.pem \
+              -v /etc/letsencrypt/live/certichain.ddns.net/privkey.pem:/etc/nginx/certificates/privkey.pem \
+              certichain-front
+          EOF
+        env:
+          GH_PAT_TOKEN: ${{ secrets.GH_PAT_TOKEN }}
