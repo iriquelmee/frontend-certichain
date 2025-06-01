@@ -31,8 +31,7 @@ jobs:
             )
 
             # Verificar Certbot
-            command -v certbot &>/dev/null || sudo apt install -y certbot python3-certbot-nginx
-
+            command -v certbot &>/dev/null || (sudo apt update && sudo apt install -y certbot)
             # Detener nginx en host si corre (no lo usamos)
             sudo systemctl stop nginx || true
 
