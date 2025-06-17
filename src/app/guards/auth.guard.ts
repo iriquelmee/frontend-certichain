@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
-import { map, take, filter, timeout } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, take, filter, timeout, catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,11 @@ export class AuthGuard implements CanActivate {
           this.router.navigate(['/login']);
           return false;
         }
+      }),
+      catchError(() => {
+        console.error('AuthGuard timeout or error');
+        this.router.navigate(['/login']);
+        return of(false);
       })
     );
   }
