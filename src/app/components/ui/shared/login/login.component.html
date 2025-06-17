@@ -1,6 +1,6 @@
-<div class="login-container">
-  <p-card styleClass="login-card">
-    <div class="login-form">
+<div class="auth-container">
+  <p-card styleClass="auth-card">
+    <div class="auth-form">
       <h2>{{ title }}</h2>
       <p>{{ subtitle }}</p>
 
@@ -10,8 +10,33 @@
         </div>
       }
 
-      <button pButton label="Iniciar Sesión" (click)="onLogin()" [loading]="loading" class="login-button">
-      </button>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="form-field">
+          <label for="username">Usuario o Email</label>
+          <input id="username" type="text" pInputText formControlName="username" class="w-full" placeholder="Ingrese su usuario o email"/>
+          @if(loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <small class="p-error">Usuario es obligatorio</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" pInputText formControlName="password"class="w-full"placeholder="Ingrese su contraseña"/>
+          @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <small class="p-error">Contraseña es obligatoria</small>
+          }
+        </div>
+
+        <div class="form-field button-container">
+          <button pButton type="submit" label="Iniciar Sesión" [loading]="loading"[disabled]="loginForm.invalid" class="auth-button w-full"></button>
+        </div>
+      </form>
+
+      <div class="links-container">
+        <a [routerLink]="['/registro']" class="auth-link">¿No tienes cuenta? Regístrate</a>
+        <a [routerLink]="['/confirmar-registro']" class="auth-link">¿Recibiste un código de verificación?</a>
+      </div>
+      
     </div>
   </p-card>
 </div>

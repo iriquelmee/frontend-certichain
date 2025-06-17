@@ -1,0 +1,7 @@
+@use '../auth-styles.scss';
+
+:host ::ng-deep {
+  .p-dropdown {
+    width: 100%;
+  }
+}

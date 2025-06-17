@@ -1,0 +1,41 @@
+<div class="auth-container">
+  <p-card styleClass="auth-card">
+    <div class="auth-form">
+      <h2>{{ title }}</h2>
+      <p>{{ subtitle }}</p>
+
+      @if(errorMessage) {
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="confirmarForm" (ngSubmit)="onConfirmar()">
+        <div class="form-field">
+          <label for="username">Nombre de Usuario</label>
+          <input id="username" type="text" pInputText formControlName="username" class="w-full"placeholder="Ingresa tu nombre de usuario"/>
+          @if(confirmarForm.get('username')?.invalid && confirmarForm.get('username')?.touched) {
+            <small class="p-error">Usuario es obligatorio</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="code">Código de Verificación</label>
+          <input id="code" type="text" pInputText formControlName="code" class="w-full"placeholder="Ingresa el código de 6 dígitos"/>
+          @if(confirmarForm.get('code')?.invalid && confirmarForm.get('code')?.touched) {
+            <small class="p-error">El código de verificación es obligatorio</small>
+          }
+        </div>
+
+        <div class="form-field button-container">
+          <button pButton type="submit" label="Confirmar Cuenta" [loading]="loading"[disabled]="confirmarForm.invalid" class="auth-button w-full"></button>
+        </div>
+      </form>
+
+      <div class="links-container">
+        <a [routerLink]="['/login']" class="auth-link">¿Ya verificaste tu cuenta? Inicia sesión</a>
+        <a [routerLink]="['/registro']" class="auth-link">¿No tienes cuenta? Regístrate</a>
+      </div>
+    </div>
+  </p-card>
+</div>

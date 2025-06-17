@@ -1,0 +1,122 @@
+:root {
+    --text-color: #000000;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-color: #ffffff;
+    }
+  }
+  
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    background-color: var(--surface-ground, #ffffff);
+  
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--surface-ground, #121212);
+    }
+  }
+  
+  .auth-card {
+    width: 100%;
+    max-width: 30rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  
+    @media (prefers-color-scheme: dark) {
+      box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
+    }
+  
+    @media screen and (max-width: 36rem) {
+      width: 95%;
+    }
+  
+    @media screen and (min-width: 36.1rem) and (max-width: 48rem) {
+      max-width: 30rem;
+    }
+  }
+  
+  .auth-form {
+    padding: 1rem 1.5rem;
+  
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+  
+    p {
+      color: var(--text-color);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+  
+    .error-message {
+      background-color: #ffe6e6;
+      color: #b71c1c;
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .form-field {
+    margin-bottom: 1rem;
+  
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+  
+    input.p-inputtext {
+      width: 100%;
+      padding: 0.75rem;
+    }
+  
+    .p-error {
+      color: #d32f2f;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+  }
+  
+  .button-container {
+    margin-top: 1.25rem;
+  }
+  
+  .auth-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .links-container {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .auth-link {
+    color: var(--primary-color, #3B82F6);
+    font-size: 0.9rem;
+    text-decoration: none;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
