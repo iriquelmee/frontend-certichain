@@ -4,6 +4,8 @@ import { DashboardComponent } from './components/ui/private/dashboard/dashboard.
 import { InstitucionesComponent } from './components/ui/private/instituciones/instituciones.component';
 import { UsuariosComponent } from './components/ui/private/usuarios/usuarios.component';
 import { LoginComponent } from './components/ui/shared/login/login.component';
+import { RegistroComponent } from './components/ui/shared/registro/registro.component';
+import { ConfirmarRegistroComponent } from './components/ui/shared/confirmar-registro/confirmar-registro.component';
 import { ProfileComponent } from './components/ui/shared/profile/profile.component';
 import { DemoComponent } from './components/ui/shared/demo/demo.component';
 import { Error400Component } from './components/ui/sys/error-400/error-400.component';
@@ -19,6 +21,14 @@ export const routes: Routes = [
     {
       path: 'login',
       component: LoginComponent
+    },
+    {
+      path: 'registro',
+      component: RegistroComponent
+    },
+    {
+      path: 'confirmar-registro',
+      component: ConfirmarRegistroComponent
     },
     {
       path: 'dashboard',
