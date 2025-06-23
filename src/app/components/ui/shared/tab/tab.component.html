@@ -7,7 +7,36 @@
     <p-tabpanels>
         @for (tab of data; track tab.value) {
             <p-tabpanel [value]="tab.value">
-                <p class="m-0">{{ tab.content }}</p>
+                @if(!tab.type || tab.type === 'text') {
+                    <p class="m-0">{{ tab.content }}</p>
+                }
+                 <!--Administacion-->
+                @else if(tab.type === 'component' && tab.component === 'Auditoria') {
+                    <app-admin-auditoria></app-admin-auditoria>
+                }
+                @else if(tab.type === 'component' && tab.component === 'Usuarios') {
+                    <app-admin-usuarios></app-admin-usuarios>
+                }
+                @else if(tab.type === 'component' && tab.component === 'Categoria') {
+                    <app-admin-categoria></app-admin-categoria>
+                }
+                <!--Instituciones-->
+                @else if(tab.type === 'component' && tab.component === 'TiposDocumentos') {
+                    <app-instituciones-tipos-documentos></app-instituciones-tipos-documentos>
+                }
+                @else if(tab.type === 'component' && tab.component === 'SolicitudesInstitucion') {
+                    <app-instituciones-solicitudes></app-instituciones-solicitudes>
+                }
+                @else if(tab.type === 'component' && tab.component === 'OtrasSolicitudes') {
+                    <app-instituciones-otras-solicitudes></app-instituciones-otras-solicitudes>
+                }
+                <!--Usuarios-->
+                @else if(tab.type === 'component' && tab.component === 'InformacionUsuario') {
+                    <app-usuarios-informacion></app-usuarios-informacion>
+                }
+                @else if(tab.type === 'component' && tab.component === 'SolicitudesUsuario') {
+                    <app-usuarios-solicitudes></app-usuarios-solicitudes>
+                }
             </p-tabpanel>
         }
     </p-tabpanels>
