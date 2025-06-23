@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TabComponent } from '../../shared/tab/tab.component';
+import { tabsInstituciones } from '../../../../../data';
 
 @Component({
   selector: 'app-instituciones',
@@ -9,14 +10,10 @@ import { TabComponent } from '../../shared/tab/tab.component';
   styleUrl: './instituciones.component.scss'
 })
 export class InstitucionesComponent implements OnInit {
-  tabs: { title: string; value: number; content: string }[] = [];
+  tabs: any[] = [];
 
   ngOnInit() {
-      this.tabs = [
-          { title: 'Administrar Solicitudes', value: 0, content: 'Tab 1 Content' },
-          { title: 'Administrar Tipos Documentos', value: 1, content: 'Tab 2 Content' },
-          { title: 'Administrar Otras Solicitudes', value: 2, content: 'Tab 3 Content' },
-      ];
+      this.tabs = tabsInstituciones;
   }
   title:string = "Instituciones";
 }
