@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TabComponent } from '../../shared/tab/tab.component';
+import { tabsAdmin } from '../../../../../data';
 
 @Component({
   selector: 'app-admin',
@@ -9,14 +10,10 @@ import { TabComponent } from '../../shared/tab/tab.component';
   styleUrl: './admin.component.scss'
 })
 export class AdminComponent implements OnInit {
-  tabs: { title: string; value: number; content: string }[] = [];
+  tabs: any[] = [];
 
   ngOnInit() {
-      this.tabs = [
-          { title: 'Usuarios', value: 0, content: 'Tab 1 Content' },
-          { title: 'Categorias', value: 1, content: 'Tab 2 Content' },
-          { title: 'Auditoría', value: 2, content: 'Tab 3 Content' },
-      ];
+      this.tabs = tabsAdmin;
   }
   title : string = "Administración";
 
