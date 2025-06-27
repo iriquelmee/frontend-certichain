@@ -3,6 +3,8 @@
         <h1>{{ this.title }}</h1>
     </div>
     @if(tabs){
-        <app-tab [data]="tabs"></app-tab>
+        <div class="grid">
+            <app-tab [data]="tabs"></app-tab>
+        </div>        
     }
 </p-card>
