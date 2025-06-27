@@ -1,36 +1,59 @@
-:host ::ng-deep .p-dialog {
-    background: white;
+:host ::ng-deep {
+  .p-dialog {
     border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.15);
-    padding: 1rem;
-    font-family: inherit;
-    color: #222;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+    background-color: white;
+    
+    .p-dialog-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--surface-border, #dee2e6);
+      
+      .p-dialog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      
+      .p-dialog-header-icon {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+    
+    .p-dialog-content {
+      padding: 1.5rem;
+    }
+    
+    .p-dialog-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--surface-border, #dee2e6);
+      text-align: right;
+    }
+  }
+  
+  .p-dialog-mask.p-component-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
   }
   
   @media (prefers-color-scheme: dark) {
-    :host ::ng-deep .p-dialog {
-      background: #121212;
+    .p-dialog {
+      background-color: #121212;
       color: #e0e0e0;
-      box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.7);
+      
+      .p-dialog-header {
+        border-bottom-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .p-dialog-footer {
+        border-top-color: rgba(255, 255, 255, 0.1);
+      }
     }
   }
   
-  :host ::ng-deep .p-dialog-header {
-    font-weight: 600;
-    font-size: 1.25rem;
-    border-bottom: 0.0625rem solid #ddd;
-    padding-bottom: 0.5rem;
-  }
-  
-  :host ::ng-deep .p-dialog-content {
-    padding-top: 1rem;
-    font-size: 1rem;
-    text-align: center;
-  }
-  
-  @media (max-width: 36rem) {
-    :host ::ng-deep .p-dialog {
-      width: 90vw !important;
-      padding: 0.75rem;
+  @media screen and (max-width: 768px) {
+    .p-dialog {
+      .p-dialog-content {
+        padding: 1rem;
+      }
     }
-  }  
+  }
+}
