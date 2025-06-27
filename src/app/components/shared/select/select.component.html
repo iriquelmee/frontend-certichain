@@ -1,0 +1,12 @@
+<p-dropdown 
+  [options]="options" 
+  [optionLabel]="optionLabel"
+  [optionValue]="optionValue"
+  [(ngModel)]="value"
+  [placeholder]="placeholder"
+  [disabled]="disabled"
+  [styleClass]="styleClass"
+  (onChange)="onSelectionChange($event)"
+  [style]="{'width':'100%'}"
+  appendTo="body">
+</p-dropdown>

@@ -1,0 +1,50 @@
+:host ::ng-deep {
+  .p-dropdown {
+    width: 100%;
+    
+    .p-dropdown-label {
+      padding: 0.75rem 1rem;
+    }
+    
+    .p-dropdown-trigger {
+      width: 3rem;
+    }
+    
+    &.p-component {
+      font-size: 1rem;
+    }
+    
+    &:not(.p-disabled).p-focus {
+      box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb, 40, 151, 140), 0.2);
+    }
+  }
+  
+  .p-dropdown-panel {
+    .p-dropdown-items {
+      .p-dropdown-item {
+        padding: 0.75rem 1rem;
+        
+        &.p-highlight {
+          background-color: var(--primary-color, #28978c);
+          color: var(--text-light, #ffffff);
+        }
+        
+        &:hover {
+          background-color: var(--surface-hover, #f6f9fc);
+        }
+      }
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .p-dropdown-panel {
+      .p-dropdown-items {
+        .p-dropdown-item {
+          &:hover:not(.p-highlight) {
+            background-color: rgba(255, 255, 255, 0.03);
+          }
+        }
+      }
+    }
+  }
+}
