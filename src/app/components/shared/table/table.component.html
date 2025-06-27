@@ -1,0 +1,35 @@
+<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: nowrap;">
+  <i class="pi pi-search" style="font-size: 1.2rem;"></i>
+  <input type="text" pInputText [(ngModel)]="searchValue" (keyup)="filterData()" placeholder="Buscar..." style="flex: 1; min-width: 0; max-width: 100%;"/>
+</div>
+
+<p-table
+  [value]="filteredData"
+  [paginator]="true"
+  [rows]="rows"
+  [first]="first"
+  [showCurrentPageReport]="showCurrentPageReport"
+  [currentPageReportTemplate]="currentPageReportTemplate"
+  (onPage)="pageChange($event)"
+  [responsiveLayout]="'scroll'"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let col of columns" >{{ col.header }}</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td *ngFor="let col of columns">
+        <span class="p-column-title">{{ col.header }}</span>
+        <ng-container *ngIf="label && col.campo.startsWith(label + '.')">
+          {{ getCamposAnidados(row, col.campo.substring(label.length + 1)) }}
+        </ng-container>
+        <ng-container *ngIf="!label || !col.campo.startsWith(label + '.')">
+          {{ col.campo.includes('.') ? getCamposAnidados(row, col.campo) : row[col.campo] }}
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
