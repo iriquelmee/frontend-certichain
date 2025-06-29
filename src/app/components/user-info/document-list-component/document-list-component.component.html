@@ -9,9 +9,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let doc of items; let i = index" [class.odd]="i % 2 === 1">
-      <td>{{ doc.name }}</td>
-      <td>{{ doc.date }}</td>
-      <td>{{ doc.institution }}</td>
+      <td>{{ doc.privateDocument.name}}</td>
+      <td>{{ doc.documentRequest.date }}</td>
+      <td>{{ doc.documentRequest.issuerID }}</td>
       <td>
         <a href="#" (click)="onDownload(doc); $event.preventDefault()">Descarga</a>
         |

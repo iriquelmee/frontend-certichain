@@ -1,6 +1,5 @@
 <p-card>
     <div class="grid">
-        <h2>{{ this.title }}</h2>
         <app-user-info-component [username]="user?.username || ''" [email]="user?.email || ''"
             (edit)="onEditUser()"></app-user-info-component>
 

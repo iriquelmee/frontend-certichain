@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SearchDocumentRequestInfo } from '../../../models/search-document-request-info';
 
 export interface DocumentInfo {
     name: string;
@@ -15,16 +16,15 @@ export interface DocumentInfo {
 })
 
 export class DocumentListComponentComponent {
-    @Input() items: DocumentInfo[] = [];
+    @Input() items: SearchDocumentRequestInfo[] = [];
+    @Output() download = new EventEmitter<SearchDocumentRequestInfo>();
+    @Output() view = new EventEmitter<SearchDocumentRequestInfo>();
 
-    @Output() download = new EventEmitter<DocumentInfo>();
-    @Output() view = new EventEmitter<DocumentInfo>();
-
-    onDownload(item: DocumentInfo) {
+    onDownload(item: SearchDocumentRequestInfo) {
         this.download.emit(item);
     }
 
-    onView(item: DocumentInfo) {
+    onView(item: SearchDocumentRequestInfo) {
         this.view.emit(item);
     }
 }

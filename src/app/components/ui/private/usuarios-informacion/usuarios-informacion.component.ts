@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { UserInfoComponentComponent } from '../../../user-info/user-info-component/user-info-component.component';
 import { DocumentRequestComponentComponent } from '../../../user-info/document-request-component/document-request-component.component';
@@ -8,6 +8,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
 import { AuthState, User } from '../../../../models/user.model';
 import { DocumentInfo } from '../../../user-info/document-list-component/document-list-component.component';
 import { Subscription } from 'rxjs';
+import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
 
 @Component({
     selector: 'app-usuarios-informacion',
@@ -19,6 +20,8 @@ export class UsuariosInformacionComponent {
     authState: AuthState | null = null;
     title: string = "Informacion";
     private sub!: Subscription;
+    @Input() requests: SearchDocumentRequestInfo[] = [
+    ];
 
     user: User | null = null;
     institutions = [];
@@ -28,7 +31,7 @@ export class UsuariosInformacionComponent {
 
     ngOnInit() {
         this.sub = this.authService.authState$
-        .subscribe(state => this.authState = state);
+            .subscribe(state => this.authState = state);
     }
 
     ngOnDestroy() {
@@ -53,7 +56,7 @@ export class UsuariosInformacionComponent {
             next: (resp) => {
                 const info: DocumentInfo = {
                     name: resp.documentTypeID,
-                    date:      
+                    date:
                         new Date(resp.date).toLocaleDateString(),
                     institution: resp.issuerID
                 };

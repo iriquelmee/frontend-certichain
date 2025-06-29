@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DocumentInfo, DocumentListComponentComponent } from '../../../user-info/document-list-component/document-list-component.component';
+import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
 
 @Component({
   selector: 'app-usuarios-solicitudes',
@@ -10,16 +11,14 @@ import { DocumentInfo, DocumentListComponentComponent } from '../../../user-info
 })
 export class UsuariosSolicitudesComponent {
   title : string = "Solicitudes ";
-
-  requests: DocumentInfo[] = [
-    { name: 'Declaración Jurada', date: '01-01-2025', institution: 'Notaría' }
-  ];
+  @Input() isActive = false;
+  @Input() requests: SearchDocumentRequestInfo[] = [];
   
-  onDownload(doc: DocumentInfo) {
+  onDownload(doc: SearchDocumentRequestInfo) {
     console.log('Descargar', doc);
   }
 
-  onView(doc: DocumentInfo) {
+  onView(doc: SearchDocumentRequestInfo) {
     console.log('Visualizar', doc);
   }
 }
