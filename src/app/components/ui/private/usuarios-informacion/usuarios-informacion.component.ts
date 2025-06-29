@@ -44,7 +44,7 @@ export class UsuariosInformacionComponent {
     onNewRequest(ev: { institution: string; document: string }) {
         console.log('Solicitar:', ev);
         const payload: DocumentRequest = {
-            id: '',
+            id: null,
             requesterID: this.authState?.user?.id ?? '',
             issuerID: 'test',//ev.institution,
             date: new Date().toISOString(),

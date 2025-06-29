@@ -1,5 +1,5 @@
 export interface DocumentRequest {
-    id: string;
+    id: string | null;
     requesterID: string;
     issuerID: string;
     date: string;
