@@ -1,0 +1,22 @@
+<table class="doc-table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Fecha</th>
+      <th>Institución</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let doc of items; let i = index" [class.odd]="i % 2 === 1">
+      <td>{{ doc.name }}</td>
+      <td>{{ doc.date }}</td>
+      <td>{{ doc.institution }}</td>
+      <td>
+        <a href="#" (click)="onDownload(doc); $event.preventDefault()">Descarga</a>
+        |
+        <a href="#" (click)="onView(doc); $event.preventDefault()">Visualizar</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

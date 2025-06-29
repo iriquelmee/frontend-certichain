@@ -199,6 +199,7 @@ export class AuthService {
 
   private setUserAuthenticated(userData: any): void {
     const user: User = {
+      id: userData.sub,
       username: userData.preferred_username || userData['cognito:username'] || userData.sub || userData.email || 'User',
       email: userData.email,
       groups: userData['cognito:groups'] || [],

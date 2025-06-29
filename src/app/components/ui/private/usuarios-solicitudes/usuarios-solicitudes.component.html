@@ -1,5 +1,7 @@
 <p-card>
     <div class="grid">
         <h2>{{ this.title }}</h2>
+        <app-document-list-component [items]="requests" (download)="onDownload($event)"
+            (view)="onView($event)"></app-document-list-component>
     </div>
 </p-card>
