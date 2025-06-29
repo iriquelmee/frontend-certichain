@@ -7,6 +7,7 @@ import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribu
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private jwtToken: string|null = null;
   private authStateSubject = new BehaviorSubject<AuthState>({user: null, isLoading: false, error: null});
   public authState$ = this.authStateSubject.asObservable();
   private userPool: CognitoUserPool;
@@ -40,6 +41,7 @@ export class AuthService {
               });
               
               const idToken = session.getIdToken().getJwtToken();
+              this.jwtToken = idToken;
               try {
                 const tokenPayload = JSON.parse(atob(idToken.split('.')[1]));
                 userData['cognito:groups'] = tokenPayload['cognito:groups'] || [];
@@ -92,6 +94,7 @@ export class AuthService {
                 
                 // Agregar grupos si están disponibles
                 const idToken = session.getIdToken().getJwtToken();
+                this.jwtToken = idToken;
                 try {
                   const tokenPayload = JSON.parse(atob(idToken.split('.')[1]));
                   userData['cognito:groups'] = tokenPayload['cognito:groups'] || [];
@@ -234,4 +237,9 @@ export class AuthService {
   get isAdmin(): boolean {
     return this.currentUser?.groups?.includes('admin') || false;
   }
+
+  setJwt(token: string) { this.jwtToken = token; }
+
+  getJwtToken(): string|null { return this.jwtToken; }
+
 }
