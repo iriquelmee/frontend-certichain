@@ -1,0 +1,27 @@
+<table class="doc-table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Institución</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let doc of items; let i = index">
+            <td>{{ doc.privateDocument?.name || 'Archivo No Cargado'}}</td>
+            <td>{{ doc.documentRequest.date }}</td>
+            <td>{{ doc.documentRequest.issuerID }}</td>
+            <td>
+                <div *ngIf="doc.privateDocument?.name == null || doc.privateDocument?.name === ''; else hasName">
+                    Carga de Documento Pendiente
+                </div>
+                <ng-template #hasName>
+                    <a href="#" (click)="onDownload(doc); $event.preventDefault()">Descarga</a>
+                    |
+                    <a href="#" (click)="onView(doc); $event.preventDefault()">Visualizar</a>
+                </ng-template>
+            </td>
+        </tr>
+    </tbody>
+</table>

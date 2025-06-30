@@ -3,6 +3,7 @@
         <h1>{{ this.title }}</h1>
     </div>
     @if(tabs){
-        <app-tab [data]="tabs"></app-tab>
+    <app-tab *ngIf="tabs?.length" [data]="tabs" [requests]="results" (tabChange)="onTabChange($event)">
+    </app-tab>
     }
 </p-card>

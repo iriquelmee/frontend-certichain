@@ -1,0 +1,20 @@
+<div class="card doc-request">
+  <h3>Solicitar Documento</h3>
+  <label>
+    Institución
+    <select [(ngModel)]="selectedInstitution">
+      <option value="" disabled>-- Selecciona institución --</option>
+      <option *ngFor="let inst of institutions" [value]="inst">{{ inst }}</option>
+    </select>
+  </label>
+
+  <label>
+    Documento
+    <select [(ngModel)]="selectedDocument">
+      <option value="" disabled>-- Selecciona documento --</option>
+      <option *ngFor="let doc of documents" [value]="doc">{{ doc }}</option>
+    </select>
+  </label>
+
+  <button class="btn-primary" (click)="onSubmit()">Solicitar</button>
+</div>

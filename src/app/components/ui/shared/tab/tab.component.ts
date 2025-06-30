@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TabsModule } from 'primeng/tabs';
 import { DemoComponent } from '../demo/demo.component';
@@ -10,15 +10,26 @@ import { InstitucionesTiposDocumentosComponent } from '../../private/institucion
 import { InstitucionesSolicitudesComponent } from '../../private/instituciones-solicitudes/instituciones-solicitudes.component';
 import { UsuariosInformacionComponent } from '../../private/usuarios-informacion/usuarios-informacion.component';
 import { UsuariosSolicitudesComponent } from '../../private/usuarios-solicitudes/usuarios-solicitudes.component';
+import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
 
 @Component({
-  selector: 'app-tab',
-  imports: [CardModule, TabsModule, AdminAuditoriaComponent,AdminCategoriaComponent,AdminUsuariosComponent, InstitucionesSolicitudesComponent, InstitucionesOtrasSolicitudesComponent, InstitucionesTiposDocumentosComponent, UsuariosInformacionComponent, UsuariosSolicitudesComponent],
-  templateUrl: './tab.component.html',
-  styleUrl: './tab.component.scss'
+    selector: 'app-tab',
+    imports: [CardModule, TabsModule, AdminAuditoriaComponent, AdminCategoriaComponent, AdminUsuariosComponent, InstitucionesSolicitudesComponent, InstitucionesOtrasSolicitudesComponent, InstitucionesTiposDocumentosComponent, UsuariosInformacionComponent, UsuariosSolicitudesComponent],
+    templateUrl: './tab.component.html',
+    styleUrl: './tab.component.scss'
 })
 export class TabComponent {
+    @Input() data: { title: string; value: number; content: string; type?: 'text' | 'component'; component?: string }[] = [];
+    @Output() tabChange = new EventEmitter<number>();
+    @Input() requests: SearchDocumentRequestInfo[] = [];
+    selectedIndex = 0;
 
-  @Input() data: { title: string; value: number; content: string; type?: 'text' | 'component'; component?: string }[] = [];
+    selectTab(value: string | number) {
+        const index = typeof value === 'string'
+            ? parseInt(value, 10)
+            : value;
+        this.selectedIndex = index;
+        this.tabChange.emit(index);
+    }
 
 }

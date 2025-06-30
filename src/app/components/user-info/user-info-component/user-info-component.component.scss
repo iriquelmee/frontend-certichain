@@ -1,0 +1,15 @@
+.user-info {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: .5rem;
+  position: relative;
+  .btn-link {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+  }
+}
