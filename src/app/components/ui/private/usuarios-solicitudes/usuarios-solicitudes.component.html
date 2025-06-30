@@ -1,5 +1,11 @@
-<p-card>
-    <div class="grid">
+<div class="grid" style="margin-bottom: 1rem;">
+    <div class="col-12">
         <h2>{{ this.title }}</h2>
     </div>
-</p-card>
+</div>
+
+<div class="grid">
+    <div class="col-12">
+        <app-table [data]="data" [columns]="tableDocumentColumns" [rows]="5" label="documentos"></app-table>
+    </div>
+</div>
