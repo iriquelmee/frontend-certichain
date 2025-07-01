@@ -1,5 +1,5 @@
 export interface UserType {
-    id: string;
+    id: string | null;
     name: string;
     state: string;
 }

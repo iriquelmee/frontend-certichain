@@ -1,5 +1,74 @@
-<p-card>
-    <div class="grid">
-        <h2>{{ this.title }}</h2>
-    </div>
-</p-card>
+<div class="container">
+
+    <section class="panel wide">
+         <h3>Buscar</h3>
+        <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="form-inline">
+            <div class="field">
+                <label>ID</label>
+                <input type="text" formControlName="id" />
+            </div>
+            <div class="field">
+                <label>Nombre</label>
+                <input type="text" formControlName="nombre" />
+            </div>
+            <button type="submit">Buscar</button>
+        </form>
+        <h3>Usuarios</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of filteredUsers">
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.userTypeId }}</td>
+                    <td>{{ u.status }}</td>
+                    <td>
+                        <a href="#" (click)="onEdit(u); $event.preventDefault()">Editar</a> |
+                        <a href="#" (click)="onToggleActive(u); $event.preventDefault()">
+                            {{ u.status == 'Activo' ? 'Desactivar' : 'Activar' }}
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="panel" *ngIf="selectedUser">
+        <h3>Editar Usuario</h3>
+        <form [formGroup]="editForm" class="form-stack">
+            <div class="field">
+                <label>Nombre</label>
+                <input type="text" formControlName="nombre" />
+            </div>
+            <div class="field">
+                <label>Tipo</label>
+                <select formControlName="tipo">
+                    <option value="">--Seleccione--</option>
+                    <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>SubTipo</label>
+                <select formControlName="subtipo">
+                    <option value="">--Seleccione--</option>
+                    <option *ngFor="let s of subtipos" [value]="s">{{ s }}</option>
+                </select>
+            </div>
+            <div class="field switch">
+                <label>Activo</label>
+                <input type="checkbox" formControlName="activo" />
+            </div>
+            <div class="actions">
+                <button type="button" (click)="onApplyChanges()" [disabled]="editForm.invalid">Aplicar Cambios</button>
+                <button type="button" (click)="cancelEdit()">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+</div>

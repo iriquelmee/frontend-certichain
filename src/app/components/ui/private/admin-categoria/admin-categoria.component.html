@@ -1,5 +1,74 @@
 <p-card>
-    <div class="grid">
-        <h2>{{ this.title }}</h2>
+    <div class="container">
+        
+        <section class="table-card">
+            <p-card>
+                <div class="header">
+                    <h2>Tipo Usuario</h2>
+                    <div class="actions">
+                        <input type="text" [(ngModel)]="newUserTypeName" placeholder="Nombre Tipo Usuario" />
+                        <button (click)="createUserType()">Crear</button>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of userTypes">
+                            <td>{{ t.id }}</td>
+                            <td>{{ t.name }}</td>
+                            <td>{{ t.state }}</td>
+                            <td>
+                                <a href="#" (click)="toggleUserTypeState(t); $event.preventDefault()">
+                                    {{ t.state === 'Activo' ? 'Desactivar' : 'Activar' }}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-card>
+        </section>
+
+        <section class="table-card">
+            <p-card>
+                <div class="header">
+                    <h2>SubTipo Usuario</h2>
+                    <div class="actions">
+                        <input type="text" [(ngModel)]="newUserSubTypeName" placeholder="Nombre SubTipo Usuario" />
+                        <button (click)="createUserSubType()">Crear</button>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let st of userSubTypes">
+                            <td>{{ st.id }}</td>
+                            <td>{{ st.name }}</td>
+                            <td>{{ st.state }}</td>
+                            <td>
+                                <a href="#" (click)="toggleUserSubTypeState(st); $event.preventDefault()">
+                                    {{ st.state === 'Activo' ? 'Desactivar' : 'Activar' }}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-card>
+        </section>
     </div>
 </p-card>
