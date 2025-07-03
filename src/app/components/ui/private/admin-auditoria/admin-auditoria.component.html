@@ -1,5 +1,46 @@
 <p-card>
-    <div class="grid">
-        <h2>{{ this.title }}</h2>
+    <div class="filters">
+        <label>
+            Emisor:
+            <input type="text" [(ngModel)]="emisor" placeholder="Emisor" />
+        </label>
+        <label>
+            Solicitante:
+            <input type="text" [(ngModel)]="solicitante" placeholder="Solicitante" />
+        </label>
+        <label>
+            Inicio:
+            <input type="date" [(ngModel)]="startDate" />
+        </label>
+        <label>
+            Fin:
+            <input type="date" [(ngModel)]="endDate" />
+        </label>
+        <button (click)="onSearchClick()">Buscar</button>
     </div>
+
+    <div *ngIf="loading">Cargando...</div>
+    <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+
+    <table class="table" *ngIf="!loading && logs.length">
+        <thead>
+            <tr>
+                <th>txID</th>
+                <th>Id Documento</th>
+                <th>Emisor</th>
+                <th>Solicitante</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let log of logs">
+                <td>{{ log.txID }}</td>
+                <td>{{ log.documentId }}</td>
+                <td>{{ log.institution }}</td>
+                <td>{{ log.userId }}</td>
+                <td>{{ log.timestamp | date:'dd-MM-yyyy' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="!loading && !logs.length">No se encontraron registros.</div>
 </p-card>
