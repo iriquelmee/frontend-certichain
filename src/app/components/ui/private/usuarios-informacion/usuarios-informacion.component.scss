@@ -1,9 +1,9 @@
 :host ::ng-deep {
   .p-card {
     margin-bottom: 1.5rem;
-    
+    background-color: whitesmoke;
     .p-card-content {
-      padding: 1.25rem;
+      margin: 0.5rem;
     }
   }
   
@@ -55,6 +55,15 @@
   }
   
   @media (prefers-color-scheme: dark) {
+    .p-card {
+      margin-bottom: 1.5rem;
+      background-color: #121212;
+      color: #e0e0e0;
+      
+      .p-card-content {
+        margin: 0.5rem;
+      }
+    }
     .p-inputtext:disabled {
       background-color: var(--surface-700, #343a40);
       border-color: var(--surface-600, #495057);
