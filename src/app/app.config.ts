@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
+import { MessageService } from 'primeng/api';
 import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { authConfig } from './auth/auth.config';
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
             preset: Aura
         }
     }),
-    provideAuth(authConfig)
+    provideAuth(authConfig),
+    MessageService
   ]
 };

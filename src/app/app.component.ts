@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CardModule } from 'primeng/card';
+import { ToastModule } from 'primeng/toast';
 import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth/auth.service';
@@ -8,7 +9,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarComponent, CardModule, CommonModule],
+  imports: [RouterOutlet, SidebarComponent, CardModule, ToastModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
