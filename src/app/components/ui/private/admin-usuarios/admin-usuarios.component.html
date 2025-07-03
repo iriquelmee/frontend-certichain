@@ -4,14 +4,11 @@
          <h3>Buscar</h3>
         <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="form-inline">
             <div class="field">
-                <label>ID</label>
-                <input type="text" formControlName="id" />
-            </div>
-            <div class="field">
                 <label>Nombre</label>
                 <input type="text" formControlName="nombre" />
             </div>
             <button type="submit">Buscar</button>
+            <button type="button" (click)="loadUserData()">Limpiar Filtro</button>
         </form>
         <h3>Usuarios</h3>
         <table>
@@ -26,7 +23,7 @@
             <tbody>
                 <tr *ngFor="let u of filteredUsers">
                     <td>{{ u.name }}</td>
-                    <td>{{ u.userTypeId }}</td>
+                    <td>{{ getUserTypeName(u.userTypeId) }}</td>
                     <td>{{ u.status }}</td>
                     <td>
                         <a href="#" (click)="onEdit(u); $event.preventDefault()">Editar</a> |
@@ -50,14 +47,14 @@
                 <label>Tipo</label>
                 <select formControlName="tipo">
                     <option value="">--Seleccione--</option>
-                    <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+                    <option *ngFor="let t of tipos" [value]="t.id">{{ t.name }}</option>
                 </select>
             </div>
             <div class="field">
                 <label>SubTipo</label>
                 <select formControlName="subtipo">
                     <option value="">--Seleccione--</option>
-                    <option *ngFor="let s of subtipos" [value]="s">{{ s }}</option>
+                    <option *ngFor="let s of subtipos" [value]="s.id">{{ s.name }}</option>
                 </select>
             </div>
             <div class="field switch">
