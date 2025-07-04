@@ -5,7 +5,77 @@
 </div>
 
 <div class="grid">
-    <div class="col-12">
+
+    <div class="col-4">
+        <div class="mode-switch">
+            <button [class.active]="mode==='solicitar'" (click)="setMode('solicitar')">
+                Solicitar
+            </button>
+            <button [class.active]="mode==='emitir'" (click)="setMode('emitir')">
+                Emitir
+            </button>
+        </div>
+
+        <form *ngIf="mode==='solicitar'" [formGroup]="requestForm" (ngSubmit)="onSolicitar()" class="form-block">
+
+            <label>
+                Institución
+                <select formControlName="institution" required>
+                    <option [ngValue]="null">-- selecciona --</option>
+                    <option *ngFor="let inst of institutions" [value]="inst.id">
+                        {{ inst.name }}
+                    </option>
+                </select>
+            </label>
+
+            <label>
+                Documento
+                <select formControlName="documentType" required>
+                    <option [ngValue]="null">-- selecciona --</option>
+                    <option *ngFor="let doc of documents" [value]="doc.id">
+                        {{ doc.name }}
+                    </option>
+                </select>
+            </label>
+
+            <button type="submit">Solicitar</button>
+        </form>
+
+        <div *ngIf="mode==='emitir'" class="form-block">
+
+            <div class="search-row">
+                <label>
+                    ID
+                    <input type="text" formControlName="id">
+                </label>
+                <button type="button" (click)="onBuscar()">Buscar</button>
+            </div>
+
+            <div *ngIf="foundRequest" class="info-block">
+                <p><strong>Id usuario:</strong> {{ foundRequest.requesterID }}</p>
+                <p><strong>Nombre usuario:</strong> {{ foundRequest.requesterID }}</p>
+            </div>
+
+            <label>
+                Documento
+                <select formControlName="documentType" required>
+                    <option [ngValue]="null">-- selecciona --</option>
+                    <option *ngFor="let doc of documents" [value]="doc.id">
+                        {{ doc.name }}
+                    </option>
+                </select>
+            </label>
+
+            <label>
+                Archivo
+                <input type="file" (change)="onFileSelected($event)" />
+            </label>
+
+            <button type="button" (click)="onEmitir()">Emitir</button>
+        </div>
+    </div>
+
+    <div class="col-8">
         <app-table [data]="data" [columns]="tableSolicitudesColumns" [rows]="5" label="solicitudes"></app-table>
     </div>
 </div>
