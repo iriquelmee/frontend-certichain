@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdminComponent } from './admin.component';
+import { TestingModule } from '../../../../../testing/test-module';
+import { CardModule } from 'primeng/card';
 
 describe('AdminComponent', () => {
   let component: AdminComponent;
@@ -8,9 +9,18 @@ describe('AdminComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminComponent]
+      imports: [
+        AdminComponent, 
+        TestingModule,
+        CardModule
+      ],
+      providers: [
+      ]
     })
     .compileComponents();
+
+    // Mock para tabsAdmin si es necesario
+    (window as any).tabsAdmin = [];
 
     fixture = TestBed.createComponent(AdminComponent);
     component = fixture.componentInstance;
