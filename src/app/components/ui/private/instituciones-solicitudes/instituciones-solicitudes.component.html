@@ -6,6 +6,21 @@
 
 <div class="grid">
 
+    <div class="info col-12">
+        <div class="info-item">
+            <label class="">Nombre</label>
+            <p class="">{{ userData.name || 'No disponible' }}</p>
+        </div>
+        <div class="info-item">
+            <label class="">Correo</label>
+            <p class="">{{ userData.email || 'No disponible' }}</p>
+        </div>
+        <div class="info-item">
+            <label class="">ID Usuario</label>
+            <p class="">{{ userData.UserID || userData.Id }}</p>
+        </div>
+    </div>
+
     <div class="col-4">
         <div class="mode-switch">
             <button [class.active]="mode==='solicitar'" (click)="setMode('solicitar')">

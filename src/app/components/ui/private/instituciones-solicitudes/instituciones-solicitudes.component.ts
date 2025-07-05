@@ -7,6 +7,11 @@ import { DocumentServiceService } from '../../../../services/document/document-s
 import { DocumentRequest } from '../../../../models/document-request';
 import { switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { UserTypeService } from '../../../../services/usertype/user-type.service';
+import { UserDataService } from '../../../../services/userdata/user-data.service';
+import { UserType } from '../../../../models/user-type';
+import { UserData } from '../../../../models/user-data';
 
 @Component({
     selector: 'app-instituciones-solicitudes',
@@ -18,15 +23,14 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     title: string = "Solicitudes";
     data!: any[];
     tableSolicitudesColumns!: any[];
+    userData: any = {};
     mode: 'solicitar' | 'emitir' = 'solicitar';
     requestForm!: FormGroup;
     emitForm!: FormGroup;
     foundRequest?: DocumentRequest;
     selectedFile?: File;
-    institutions = [
-        { id: 'inst1', name: 'Institución A' },
-        { id: 'inst2', name: 'Institución B' },
-    ];
+    tipos: UserType[] = [];
+    institutions: UserData[] = [];
     documents = [
         { id: 'doc1', name: 'Documento X' },
         { id: 'doc2', name: 'Documento Y' },
@@ -34,12 +38,17 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private docSvc: DocumentServiceService
+        private docSvc: DocumentServiceService,
+        private authService: AuthService,
+        private userTypeService: UserTypeService,
+        private userDataService: UserDataService
     ) { }
 
     ngOnInit(): void {
+        const currentUser = this.authService.currentUser;
         this.callApiSolicitudes();
-
+        this.getUserTypes();
+        
         if (this.data != undefined) {
             this.setTableColumnsHeaders();
         }
@@ -53,6 +62,30 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             name: [{ value: '', disabled: true }],
             documentType: [null],
         });
+
+        this.userData = {
+            Id: currentUser?.id || '',
+            UserID: currentUser?.username || '',
+            UserTypeId: currentUser?.groups?.length ? currentUser.groups[0] : 'user',
+            UserSubTypeId: 'user',
+            name: currentUser?.username || '',
+            email: currentUser?.email || ''
+        };
+
+    }
+
+    getUserTypes(){
+        this.userTypeService.getAll().subscribe({
+            next: (data) => {
+                this.tipos = data.filter(item =>
+                    item.state?.toLowerCase() === 'activo'
+                );
+                this.getInstitutions()
+            },
+            error: (err) => {
+                console.error('Error al obtener tipos de usuarios:', err);
+            }
+        })
     }
 
     callApiSolicitudes() {
@@ -61,6 +94,18 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     setTableColumnsHeaders() {
         this.tableSolicitudesColumns = institucionSolicitudesColumns;
+    }
+
+    getInstitutions(){
+        this.userDataService.getByUserTypeId(this.getInstitutionID()).subscribe({
+            next: (data) => {
+                this.institutions = data;
+            },
+            error: (err) => {
+                console.error('Error al buscar instituciones:', err);
+                this.institutions = [];
+            }
+        })
     }
 
     setMode(m: 'solicitar' | 'emitir') {
@@ -88,13 +133,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     onBuscar() {
         const searchId = this.emitForm.value.id;
-        /*this.docSvc.getRequestById(searchId).subscribe(req => {
-            this.foundRequest = req;
-            this.emitForm.patchValue({
-                name: req.requesterID,
-                documentType: req.documentTypeID
-            });
-        });*/
+
     }
 
     onFileSelected(ev: Event) {
@@ -125,6 +164,12 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             this.foundRequest = undefined;
             this.selectedFile = undefined;
         });
+    }
+
+    getInstitutionID(): string{
+        return this.tipos.find(item =>
+                    item?.name.toLowerCase() === 'institucion'
+                )?.id || '';
     }
 
 }
