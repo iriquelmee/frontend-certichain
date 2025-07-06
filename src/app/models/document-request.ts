@@ -4,5 +4,5 @@ export interface DocumentRequest {
     issuerID: string;
     date: string;
     documentTypeID: string;
-    state: string;
+    state: string | null;
 }

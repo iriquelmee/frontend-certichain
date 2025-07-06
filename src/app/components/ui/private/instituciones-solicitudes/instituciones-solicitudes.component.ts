@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { TableComponent } from '../../../shared/table/table.component';
 import { institucionSolicitudes, institucionSolicitudesColumns } from '../../../../../data';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentServiceService } from '../../../../services/document/document-service.service';
@@ -12,29 +11,39 @@ import { UserTypeService } from '../../../../services/usertype/user-type.service
 import { UserDataService } from '../../../../services/userdata/user-data.service';
 import { UserType } from '../../../../models/user-type';
 import { UserData } from '../../../../models/user-data';
+import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
 
 @Component({
     selector: 'app-instituciones-solicitudes',
-    imports: [CardModule, TableComponent, CommonModule, ReactiveFormsModule, FormsModule],
+    imports: [CardModule, CommonModule, ReactiveFormsModule, FormsModule],
     templateUrl: './instituciones-solicitudes.component.html',
     styleUrl: './instituciones-solicitudes.component.scss'
 })
 export class InstitucionesSolicitudesComponent implements OnInit {
-    title: string = "Solicitudes";
+    title: string = "Emitir";
     data!: any[];
     tableSolicitudesColumns!: any[];
     userData: any = {};
+
     mode: 'solicitar' | 'emitir' = 'solicitar';
+
     requestForm!: FormGroup;
     emitForm!: FormGroup;
+    searchForm!: FormGroup;
+
     foundRequest?: DocumentRequest;
     selectedFile?: File;
+
     tipos: UserType[] = [];
     institutions: UserData[] = [];
+    results: SearchDocumentRequestInfo[] = [];
     documents = [
         { id: 'doc1', name: 'Documento X' },
         { id: 'doc2', name: 'Documento Y' },
     ];
+
+    loading = false;
+    errorMsg: string | null = null;
 
     constructor(
         private fb: FormBuilder,
@@ -48,7 +57,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         const currentUser = this.authService.currentUser;
         this.callApiSolicitudes();
         this.getUserTypes();
-        
+
         if (this.data != undefined) {
             this.setTableColumnsHeaders();
         }
@@ -62,6 +71,12 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             name: [{ value: '', disabled: true }],
             documentType: [null],
         });
+        this.searchForm = this.fb.group({
+            id: [''],
+            emisor: [''],
+            inicio: [''],
+            fin: ['']
+        });
 
         this.userData = {
             Id: currentUser?.id || '',
@@ -74,7 +89,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     }
 
-    getUserTypes(){
+    getUserTypes() {
         this.userTypeService.getAll().subscribe({
             next: (data) => {
                 this.tipos = data.filter(item =>
@@ -96,7 +111,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.tableSolicitudesColumns = institucionSolicitudesColumns;
     }
 
-    getInstitutions(){
+    getInstitutions() {
         this.userDataService.getByUserTypeId(this.getInstitutionID()).subscribe({
             next: (data) => {
                 this.institutions = data;
@@ -166,10 +181,29 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         });
     }
 
-    getInstitutionID(): string{
+    getInstitutionID(): string {
         return this.tipos.find(item =>
-                    item?.name.toLowerCase() === 'institucion'
-                )?.id || '';
+            item?.name.toLowerCase() === 'institucion'
+        )?.id || '';
+    }
+
+    onSearch(): void {
+        this.loading = true;
+        this.errorMsg = null;
+
+        const { emisor, inicio, fin } = this.searchForm.value;
+        console.log(emisor);
+        this.docSvc.userSearchRequests(this.userData.Id, emisor, inicio, fin )
+            .subscribe({
+                next: data => {
+                    this.results = data;
+                    this.loading = false;
+                },
+                error: err => {
+                    this.errorMsg = err.message || 'Error al buscar.';
+                    this.loading = false;
+                }
+            });
     }
 
 }

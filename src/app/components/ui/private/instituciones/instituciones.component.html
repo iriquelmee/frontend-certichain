@@ -2,6 +2,20 @@
     <div class="grid">
         <h1>{{ this.title }}</h1>
     </div>
+    <div class="info col-12">
+        <div class="info-item">
+            <label class="">Nombre</label>
+            <p class="">{{ userData.name || 'No disponible' }}</p>
+        </div>
+        <div class="info-item">
+            <label class="">Correo</label>
+            <p class="">{{ userData.email || 'No disponible' }}</p>
+        </div>
+        <div class="info-item">
+            <label class="">ID Cuenta</label>
+            <p class="">{{ userData.UserID || userData.Id }}</p>
+        </div>
+    </div>
     @if(tabs){
         <app-tab [data]="tabs"></app-tab>
     }

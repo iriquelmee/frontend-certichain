@@ -3,5 +3,5 @@ import { PrivateDocument } from "./private-document";
 
 export interface SearchDocumentRequestInfo {
     documentRequest: DocumentRequest;
-    privateDocument: PrivateDocument;
+    privateDocument: PrivateDocument | null;
 }
