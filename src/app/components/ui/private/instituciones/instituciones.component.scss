@@ -12,64 +12,6 @@
 }
 
 
-.mode-switch {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-
-  button {
-    flex: 1;
-    padding: 0.5rem 1rem;
-    border: 1px solid #666;
-    cursor: pointer;
-
-    &.active {
-      background: #4285f4;
-      color: #fff;
-    }
-  }
-}
-
-.form-block {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 500;
-  }
-
-  input[type="text"],
-  select,
-  input[type="file"] {
-    margin-top: 0.25rem;
-    padding: 0.5rem;
-    font-size: 1rem;
-  }
-
-  .search-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.5rem;
-  }
-
-  .info-block {
-    padding: 1rem;
-    border: 1px solid #ddd;
-  }
-
-  button {
-    align-self: start;
-    padding: 0.5rem 1rem;
-    border: none;
-    background: #4285f4;
-    color: #fff;
-    cursor: pointer;
-  }
-}
-
 .search-form {
   margin-bottom: 1rem;
   .fields {
@@ -112,4 +54,28 @@
 
 .padding-bottom-20{
     padding-bottom: 20px;
+}
+
+.upload-panel {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  form > div {
+    margin-bottom: 0.8rem;
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+    input[type="text"],
+    input[readonly] {
+      width: 100%;
+      padding: 0.4rem;
+    }
+  }
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    button { min-width: 6rem; }
+  }
 }

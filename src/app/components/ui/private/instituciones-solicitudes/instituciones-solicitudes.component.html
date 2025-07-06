@@ -6,73 +6,30 @@
 
 <div class="grid">
 
-    <div class="padding-bottom-20 col-4">
-        <div class="mode-switch">
-            <button [class.active]="mode==='solicitar'" (click)="setMode('solicitar')">
-                Solicitar
-            </button>
-            <button [class.active]="mode==='emitir'" (click)="setMode('emitir')">
-                Emitir
-            </button>
-        </div>
-
-        <form *ngIf="mode==='solicitar'" [formGroup]="requestForm" (ngSubmit)="onSolicitar()" class="form-block">
-
-            <label>
-                Institución
-                <select formControlName="institution" required>
-                    <option [ngValue]="null">-- selecciona --</option>
-                    <option *ngFor="let inst of institutions" [value]="inst.id">
-                        {{ inst.name }}
-                    </option>
-                </select>
-            </label>
-
-            <label>
-                Documento
-                <select formControlName="documentType" required>
-                    <option [ngValue]="null">-- selecciona --</option>
-                    <option *ngFor="let doc of documents" [value]="doc.id">
-                        {{ doc.name }}
-                    </option>
-                </select>
-            </label>
-
-            <button type="submit">Solicitar</button>
+    <div *ngIf="selectedRequest" class="upload-panel">
+        <h3>Cargar documento</h3>
+        <form [formGroup]="uploadForm" (ngSubmit)="onUploadSubmit()">
+            <div>
+                <label>ID Registro</label>
+                <input formControlName="requestId" readonly />
+            </div>
+            <div>
+                <label>Emisor</label>
+                <input formControlName="issuerId" readonly />
+            </div>
+            <div>
+                <label>Tipo Documento</label>
+                <input formControlName="documentTypeId" readonly />
+            </div>
+            <div>
+                <label>Archivo</label>
+                <input type="file" (change)="onFileChange($event)" />
+            </div>
+            <div class="buttons">
+                <button type="submit" [disabled]="uploadForm.invalid">Enviar</button>
+                <button type="button" (click)="onCancelUpload()">Cancelar</button>
+            </div>
         </form>
-
-        <div *ngIf="mode==='emitir'" class="form-block">
-
-            <div class="search-row">
-                <label>
-                    ID
-                    <input type="text" formControlName="id">
-                </label>
-                <button type="button" (click)="onBuscar()">Buscar</button>
-            </div>
-
-            <div *ngIf="foundRequest" class="info-block">
-                <p><strong>Id usuario:</strong> {{ foundRequest.requesterID }}</p>
-                <p><strong>Nombre usuario:</strong> {{ foundRequest.requesterID }}</p>
-            </div>
-
-            <label>
-                Documento
-                <select formControlName="documentType" required>
-                    <option [ngValue]="null">-- selecciona --</option>
-                    <option *ngFor="let doc of documents" [value]="doc.id">
-                        {{ doc.name }}
-                    </option>
-                </select>
-            </label>
-
-            <label>
-                Archivo
-                <input type="file" (change)="onFileSelected($event)" />
-            </label>
-
-            <button type="button" (click)="onEmitir()">Emitir</button>
-        </div>
     </div>
 
     <div class="col-8">
@@ -121,6 +78,18 @@
                     <td>{{ r.privateDocument?.name }}</td>
                     <td>{{ r.documentRequest.date | date:'dd-MM-yyyy' }}</td>
                     <td>{{ r.documentRequest.state }}</td>
+                    <td>
+                        <ng-container *ngIf="r.documentRequest.state === 'UPLOADED'; else showUpload">
+                            <a href="#" (click)="onDownload(r); $event.preventDefault()">
+                                Descargar
+                            </a>
+                        </ng-container>
+                        <ng-template #showUpload>
+                            <a href="#" (click)="onStartUpload(r); $event.preventDefault()">
+                                Cargar
+                            </a>
+                        </ng-template>
+                    </td>
                 </tr>
             </tbody>
         </table>

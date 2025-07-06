@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { institucionSolicitudes, institucionSolicitudesColumns } from '../../../../../data';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DocumentServiceService } from '../../../../services/document/document-service.service';
 import { DocumentRequest } from '../../../../models/document-request';
 import { switchMap } from 'rxjs';
@@ -21,14 +21,9 @@ import { SearchDocumentRequestInfo } from '../../../../models/search-document-re
 })
 export class InstitucionesSolicitudesComponent implements OnInit {
     title: string = "Emitir";
-    data!: any[];
-    tableSolicitudesColumns!: any[];
     userData: any = {};
 
-    mode: 'solicitar' | 'emitir' = 'solicitar';
-
-    requestForm!: FormGroup;
-    emitForm!: FormGroup;
+    uploadForm!: FormGroup;
     searchForm!: FormGroup;
 
     foundRequest?: DocumentRequest;
@@ -37,10 +32,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     tipos: UserType[] = [];
     institutions: UserData[] = [];
     results: SearchDocumentRequestInfo[] = [];
-    documents = [
-        { id: 'doc1', name: 'Documento X' },
-        { id: 'doc2', name: 'Documento Y' },
-    ];
+    selectedRequest: SearchDocumentRequestInfo | null = null;
 
     loading = false;
     errorMsg: string | null = null;
@@ -55,27 +47,20 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     ngOnInit(): void {
         const currentUser = this.authService.currentUser;
-        this.callApiSolicitudes();
         this.getUserTypes();
 
-        if (this.data != undefined) {
-            this.setTableColumnsHeaders();
-        }
-
-        this.requestForm = this.fb.group({
-            institution: [null],
-            documentType: [null],
-        });
-        this.emitForm = this.fb.group({
-            id: [''],
-            name: [{ value: '', disabled: true }],
-            documentType: [null],
-        });
         this.searchForm = this.fb.group({
             id: [''],
             emisor: [''],
             inicio: [''],
             fin: ['']
+        });
+
+        this.uploadForm = this.fb.group({
+            requestId: [{ value: '', disabled: true }, Validators.required],
+            issuerId: [{ value: '', disabled: true }, Validators.required],
+            documentTypeId: [{ value: '', disabled: true }, Validators.required],
+            file: [null, Validators.required]
         });
 
         this.userData = {
@@ -103,14 +88,6 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         })
     }
 
-    callApiSolicitudes() {
-        this.data = institucionSolicitudes;
-    }
-
-    setTableColumnsHeaders() {
-        this.tableSolicitudesColumns = institucionSolicitudesColumns;
-    }
-
     getInstitutions() {
         this.userDataService.getByUserTypeId(this.getInstitutionID()).subscribe({
             next: (data) => {
@@ -121,64 +98,6 @@ export class InstitucionesSolicitudesComponent implements OnInit {
                 this.institutions = [];
             }
         })
-    }
-
-    setMode(m: 'solicitar' | 'emitir') {
-        this.mode = m;
-        this.requestForm.reset();
-        this.emitForm.reset();
-        this.foundRequest = undefined;
-        this.selectedFile = undefined;
-    }
-
-    onSolicitar() {
-        const dto: DocumentRequest = {
-            id: null,
-            requesterID: 'CURRENT_USER_ID',
-            issuerID: this.requestForm.value.institution,
-            date: new Date().toISOString(),
-            documentTypeID: this.requestForm.value.documentType,
-            state: 'REQUESTED'
-        };
-        this.docSvc.createRequest(dto).subscribe(res => {
-            alert(`Solicitud creada con ID ${res.id}`);
-            this.requestForm.reset();
-        });
-    }
-
-    onBuscar() {
-        const searchId = this.emitForm.value.id;
-
-    }
-
-    onFileSelected(ev: Event) {
-        const input = ev.target as HTMLInputElement;
-        if (input.files?.length) {
-            this.selectedFile = input.files[0];
-        }
-    }
-
-    onEmitir() {
-        if (!this.foundRequest || !this.selectedFile) {
-            alert('Primero busca la solicitud y carga un archivo.');
-            return;
-        }
-        const dto: DocumentRequest = {
-            id: null,
-            requesterID: this.foundRequest.requesterID,
-            issuerID: this.foundRequest.issuerID,
-            date: new Date().toISOString(),
-            documentTypeID: this.emitForm.value.documentType,
-            state: 'EMITTED'
-        };
-        this.docSvc.createRequest(dto).pipe(
-            switchMap(created => this.docSvc.uploadDocument(created.id!, this.selectedFile!))
-        ).subscribe(() => {
-            alert('Documento emitido correctamente.');
-            this.emitForm.reset();
-            this.foundRequest = undefined;
-            this.selectedFile = undefined;
-        });
     }
 
     getInstitutionID(): string {
@@ -193,7 +112,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
         const { emisor, inicio, fin } = this.searchForm.value;
         console.log(emisor);
-        this.docSvc.userSearchRequests(this.userData.Id, emisor, inicio, fin )
+        this.docSvc.userSearchRequests(this.userData.Id, emisor, inicio, fin)
             .subscribe({
                 next: data => {
                     this.results = data;
@@ -206,4 +125,44 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             });
     }
 
+    onStartUpload(item: SearchDocumentRequestInfo): void {
+        this.selectedRequest = item;
+        this.uploadForm.patchValue({
+            requestId: item.documentRequest.id,
+            issuerId: item.documentRequest.issuerID,
+            documentTypeId: item.documentRequest.documentTypeID
+        });
+    }
+
+    onFileChange(ev: Event) {
+        const input = ev.target as HTMLInputElement;
+        if (input.files && input.files.length) {
+            this.uploadForm.patchValue({ file: input.files[0] });
+        }
+    }
+
+    onUploadSubmit(): void {
+        if (!this.selectedRequest || this.uploadForm.invalid || !this.selectedRequest.documentRequest.id) { return; }
+
+        this.docSvc.uploadDocument(this.selectedRequest.documentRequest.id, this.uploadForm.value.file)
+            .subscribe({
+                next: () => {
+                    alert('Carga exitosa');
+                    this.selectedRequest = null;
+                    this.uploadForm.reset();
+                },
+                error: err => {
+                    alert(`Error al cargar: ${err.message}`);
+                }
+            });
+    }
+
+    onCancelUpload(): void {
+        this.selectedRequest = null;
+        this.uploadForm.reset();
+    }
+
+    onDownload(item: SearchDocumentRequestInfo): void {
+        window.open(item.privateDocument?.path, '_blank');
+    }
 }
