@@ -1,8 +1,8 @@
 <div class="grid">
     <p-card>
-        <div class="col-6 md:col-6 mb-3">
+        <div class="col-12 md:col-12 mb-3">
             <div class="col-12" style="margin-bottom: 1rem;">
-            <h3 class="mb-0">Solicitar</h3>
+            <h3 class="mb-0">Solicitante</h3>
         </div>
         <div class="p-4">
             <div class="field mb-4">
@@ -16,14 +16,6 @@
             <div class="field mb-4">
                 <label class="block text-900 font-medium mb-2">ID Usuario</label>
                 <p class="text-lg">{{ userData.UserID || userData.Id }}</p>
-            </div>
-            <div class="field mb-4">
-                <label class="block text-900 font-medium mb-2">Tipo de Usuario</label>
-                <p-chip [label]="userData.UserTypeId" styleClass="mr-2 font-medium"></p-chip>
-            </div>
-            <div class="field mb-4">
-                <label class="block text-900 font-medium mb-2">Subtipo de Usuario</label>
-                <p-chip [label]="userData.UserSubTypeId" styleClass="mr-2 font-medium"></p-chip>
             </div>
         </div>
         </div>
@@ -40,7 +32,7 @@
                         <label class="block text-900 font-medium mb-2">Institución</label>
                         <div *ngIf="loadingInstituciones" class="flex align-items-center">
                             <i class="pi pi-spinner pi-spin mr-2"></i>
-                            <span>Cargando instituciones...</span>
+                            <span> Cargando instituciones...</span>
                         </div>
                         <app-select *ngIf="!loadingInstituciones && !noInstituciones" formControlName="institucion" [options]="instituciones" optionLabel="label" optionValue="value" placeholder="Seleccione una institución" styleClass="w-full"></app-select>
                 <div *ngIf="noInstituciones" class="p-3 border-1 border-round surface-overlay">
@@ -52,8 +44,19 @@
                     </div>
                     <div class="field mb-4">
                         <label class="block text-900 font-medium mb-2">Documento</label>
-                        <app-select formControlName="documento" [options]="tiposDocumentos" optionLabel="label" optionValue="value" placeholder="Seleccione un documento" styleClass="w-full"></app-select>
+                        <div *ngIf="loadingTiposDocumentos" class="flex align-items-center">
+                            <i class="pi pi-spinner pi-spin mr-2"></i>
+                            <span> Cargando tipos de documentos...</span>
+                        </div>
+                        <app-select *ngIf="!loadingTiposDocumentos && !noTiposDocumentos" formControlName="documento" [options]="tiposDocumentos" optionLabel="label" optionValue="value" placeholder="Seleccione un documento" styleClass="w-full"></app-select>
+                        <div *ngIf="noTiposDocumentos" class="p-3 border-1 border-round surface-overlay">
+                            <div class="flex align-items-center justify-content-center flex-column">
+                                <i class="pi pi-exclamation-triangle text-lg mb-2 text-yellow-500"></i>
+                                <p class="text-sm mb-0">No hay tipos de documentos disponibles</p>
+                            </div>
+                        </div>
                     </div>
+                    
                 </form>
             </div>
             <div class="flex justify-content-center p-3">

@@ -41,6 +41,9 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
   loadingInstituciones: boolean = false;
   noInstituciones: boolean = false;
 
+  loadingTiposDocumentos: boolean = false;
+  noTiposDocumentos: boolean = false;
+
   private subscriptions: Subscription = new Subscription();
   constructor(
     private userDataService: UserDataService,
@@ -239,11 +242,15 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
   }
 
   getTiposDocumentos() {
+    this.loadingTiposDocumentos = true;
+    this.noTiposDocumentos = false;
     this.tiposDocumentos = [];
-
+  
     try {
       const docTypesSub = this.documentTypeService.getAll().subscribe({
         next: (tipos) => {
+          this.loadingTiposDocumentos = false;
+          
           if (tipos && tipos.length > 0) {
             this.tiposDocumentos = tipos.map(tipo => {
               const docType = tipo as any;
@@ -252,30 +259,36 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
                 value: docType.id || docType.userID || 'unknown'
               };
             });
+            this.noTiposDocumentos = false;
           } else {
             console.warn('No se encontraron tipos de documentos');
             this.tiposDocumentos = [
               { label: 'Certificado', value: 'certificado' },
               { label: 'Declaración', value: 'declaracion' }
             ];
+            this.noTiposDocumentos = false;
           }
         },
         error: (err) => {
+          this.loadingTiposDocumentos = false;
           console.error('Error cargando tipos de documentos:', err);
           this.tiposDocumentos = [
             { label: 'Certificado', value: 'certificado' },
             { label: 'Declaración', value: 'declaracion' }
           ];
+          this.noTiposDocumentos = false;
         }
       });
-
+  
       this.subscriptions.add(docTypesSub);
     } catch (error) {
+      this.loadingTiposDocumentos = false;
       console.error('Error en proceso de carga de tipos de documentos:', error);
       this.tiposDocumentos = [
         { label: 'Certificado', value: 'certificado' },
         { label: 'Declaración', value: 'declaracion' }
       ];
+      this.noTiposDocumentos = false;
     }
   }
 
