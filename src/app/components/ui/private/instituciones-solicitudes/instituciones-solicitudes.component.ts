@@ -51,14 +51,14 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
         this.searchForm = this.fb.group({
             id: [''],
-            emisor: [''],
+            solicitante: [''],
             inicio: [''],
             fin: ['']
         });
 
         this.uploadForm = this.fb.group({
             requestId: [{ value: '', disabled: true }, Validators.required],
-            issuerId: [{ value: '', disabled: true }, Validators.required],
+            requesterId: [{ value: '', disabled: true }, Validators.required],
             documentTypeId: [{ value: '', disabled: true }, Validators.required],
             file: [null, Validators.required]
         });
@@ -72,6 +72,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             email: currentUser?.email || ''
         };
 
+        this.onSearch();
     }
 
     getUserTypes() {
@@ -110,9 +111,9 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.loading = true;
         this.errorMsg = null;
 
-        const { emisor, inicio, fin } = this.searchForm.value;
-        console.log(emisor);
-        this.docSvc.userSearchRequests(this.userData.Id, emisor, inicio, fin)
+        const { solicitante, inicio, fin } = this.searchForm.value;
+
+        this.docSvc.institutionSearchRequests(solicitante, this.userData.Id, inicio, fin)
             .subscribe({
                 next: data => {
                     this.results = data;
@@ -129,7 +130,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.selectedRequest = item;
         this.uploadForm.patchValue({
             requestId: item.documentRequest.id,
-            issuerId: item.documentRequest.issuerID,
+            requesterId: item.documentRequest.requesterID,
             documentTypeId: item.documentRequest.documentTypeID
         });
     }

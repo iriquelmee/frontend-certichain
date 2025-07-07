@@ -14,8 +14,8 @@
                 <input formControlName="requestId" readonly />
             </div>
             <div>
-                <label>Emisor</label>
-                <input formControlName="issuerId" readonly />
+                <label>Solicitante</label>
+                <input formControlName="requesterId" readonly />
             </div>
             <div>
                 <label>Tipo Documento</label>
@@ -35,15 +35,15 @@
     <div class="col-8">
         <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
             <div class="fields">
-                <label>
-                    Emisor
-                    <select formControlName="emisor" required>
-                        <option [ngValue]="null">-- emisor --</option>
+                <!--<label>
+                    Solicitante
+                    <select formControlName="solicitante" required>
+                        <option [ngValue]="null">-- solicitante --</option>
                         <option *ngFor="let inst of institutions" [value]="inst.id">
                             {{ inst.name }}
                         </option>
                     </select>
-                </label>
+                </label>-->
                 <label>
                     Inicio
                     <input formControlName="inicio" type="date" />
@@ -64,7 +64,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Emisor</th>
+                    <th>Solicitante</th>
                     <th>Nombre</th>
                     <th>Fecha</th>
                     <th>Estado</th>
@@ -74,8 +74,8 @@
             <tbody>
                 <tr *ngFor="let r of results; let i = index">
                     <td>{{ r.documentRequest.id }}</td>
-                    <td>{{ r.documentRequest.issuerID }}</td>
-                    <td>{{ r.privateDocument?.name }}</td>
+                    <td>{{ r.documentRequest.requesterID }}</td>
+                    <td>{{ r.privateDocument?.name || 'Archivo no Cargado' }}</td>
                     <td>{{ r.documentRequest.date | date:'dd-MM-yyyy' }}</td>
                     <td>{{ r.documentRequest.state }}</td>
                     <td>
