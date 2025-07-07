@@ -111,7 +111,7 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
         if (!this.requestForm.value.institution) {
             return;
         }
-        this.documentTypeServcie.getByUserId(this.userData.Id).subscribe({
+        this.documentTypeServcie.getByUserId(this.requestForm.value.institution).subscribe({
             next: (data) => {
                 this.documentsType = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'

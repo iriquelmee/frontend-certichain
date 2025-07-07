@@ -14,7 +14,7 @@
                 Institución
                 <select formControlName="institution" (change)="getInstitutionDocTypes()" required>
                     <option [ngValue]="null">-- selecciona --</option>
-                    <option *ngFor="let inst of institutions" [value]="inst.id">
+                    <option *ngFor="let inst of institutions" [value]="inst.userID">
                         {{ inst.name }}
                     </option>
                 </select>
