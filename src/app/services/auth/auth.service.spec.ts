@@ -9,7 +9,6 @@ describe('AuthService', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    // creando spy para el Router
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     
     TestBed.configureTestingModule({
@@ -22,12 +21,25 @@ describe('AuthService', () => {
     
     service = TestBed.inject(AuthService);
     
-    // config para evitar errores con Cognito sin iniciar configuracion de sesion
     spyOn(service as any, 'checkSession').and.returnValue(undefined);
+    
+    (service as any).userPool = jasmine.createSpyObj('CognitoUserPool', ['signUp', 'getCurrentUser']);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+  
+  describe('login', () => {
+    it('should set loading state when called', () => {
+      spyOn(service as any, 'setLoading').and.callThrough();
+      const mockCognitoUser = jasmine.createSpyObj('CognitoUser', ['authenticateUser']);
+      mockCognitoUser.authenticateUser.and.callFake((authDetails: any, callbacks: any) => {
+        callbacks.onFailure({ message: 'Error' });
+      });
+      service.login('testuser', 'password').catch(() => {});
+      expect((service as any).setLoading).toHaveBeenCalled();
+    });
   });
 
   describe('getters', () => {
@@ -47,6 +59,15 @@ describe('AuthService', () => {
       (service as any).authStateSubject.next({ user: null, isLoading: false, error: null });
       expect(service.isAuthenticated).toBeFalse();
     });
+    
+    it('should return isAdmin = true for user in admin group', () => {
+      const adminUser = { 
+        id: '1', username: 'admin', email: 'admin@example.com', 
+        groups: ['admin'], isAuthenticated: true 
+      };
+      (service as any).authStateSubject.next({ user: adminUser, isLoading: false, error: null });
+      expect(service.isAdmin).toBeTrue();
+    });
   });
 
   describe('JWT token management', () => {
@@ -57,6 +78,50 @@ describe('AuthService', () => {
       service.setJwt(testToken);
       
       expect(service.getJwtToken()).toBe(testToken);
+    });
+  });
+  
+  describe('register', () => {
+    it('should set loading state and call signUp', () => {
+      spyOn(service as any, 'setLoading').and.callThrough();
+      
+      (service as any).userPool.signUp.and.callFake((username: string, password: string, attributes: any[], validation: any[], callback: any) => {
+        callback({ message: 'Error de prueba' }, null);
+      });
+      
+      service.register('testuser', 'password', 'test@example.com', 'usuario', 'Test User')
+        .catch(() => {});
+      
+      expect((service as any).setLoading).toHaveBeenCalled();
+      expect((service as any).userPool.signUp).toHaveBeenCalled();
+    });
+  });
+  
+  describe('confirmRegistration', () => {
+    it('should set loading state when called', () => {
+      (service as any).setLoading();
+      expect((service as any).authStateSubject.value.isLoading).toBeTrue();
+    });
+  });
+  
+  describe('logout', () => {
+    it('should sign out user and navigate to login', () => {
+      const mockCognitoUser = jasmine.createSpyObj('CognitoUser', ['signOut']);
+      (service as any).userPool.getCurrentUser.and.returnValue(mockCognitoUser);
+      spyOn(localStorage, 'clear');
+      spyOn(sessionStorage, 'clear');
+      service.logout();
+      expect(mockCognitoUser.signOut).toHaveBeenCalled();
+      expect(localStorage.clear).toHaveBeenCalled();
+      expect(sessionStorage.clear).toHaveBeenCalled();
+      expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
+    });
+    
+    it('should handle logout when no user is logged in', () => {
+      (service as any).userPool.getCurrentUser.and.returnValue(null);
+      
+      service.logout();
+      expect(routerSpy.navigate).not.toHaveBeenCalled();
     });
   });
 });

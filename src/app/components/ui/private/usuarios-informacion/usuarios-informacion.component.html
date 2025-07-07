@@ -26,11 +26,6 @@
                 <p-chip [label]="userData.UserSubTypeId" styleClass="mr-2 font-medium"></p-chip>
             </div>
         </div>
-        <ng-template pTemplate="footer">
-            <div class="flex justify-content-end p-3">
-                <p-button icon="pi pi-pencil" label="Editar" (onClick)="openEditModal()"></p-button>
-            </div>
-        </ng-template> 
         </div>
     </p-card>
 
@@ -43,7 +38,17 @@
                 <form [formGroup]="solicitudForm">
                     <div class="field mb-4">
                         <label class="block text-900 font-medium mb-2">Institución</label>
-                        <app-select formControlName="institucion" [options]="instituciones" optionLabel="label" optionValue="value" placeholder="Seleccione una institución" styleClass="w-full"></app-select>
+                        <div *ngIf="loadingInstituciones" class="flex align-items-center">
+                            <i class="pi pi-spinner pi-spin mr-2"></i>
+                            <span>Cargando instituciones...</span>
+                        </div>
+                        <app-select *ngIf="!loadingInstituciones && !noInstituciones" formControlName="institucion" [options]="instituciones" optionLabel="label" optionValue="value" placeholder="Seleccione una institución" styleClass="w-full"></app-select>
+                <div *ngIf="noInstituciones" class="p-3 border-1 border-round surface-overlay">
+                    <div class="flex align-items-center justify-content-center flex-column">
+                        <i class="pi pi-exclamation-triangle text-lg mb-2 text-yellow-500"></i>
+                        <p class="text-sm mb-0">No hay instituciones disponibles en la base de datos</p>
+                    </div>
+                </div>
                     </div>
                     <div class="field mb-4">
                         <label class="block text-900 font-medium mb-2">Documento</label>
@@ -51,11 +56,17 @@
                     </div>
                 </form>
             </div>
-            <ng-template pTemplate="footer">
-                <div class="flex justify-content-end p-3">
-                    <p-button [icon]="loading ? 'pi pi-spinner pi-spin' : 'pi pi-send'" label="Solicitar" (onClick)="onSolicitar()" [disabled]="solicitudForm.invalid || loading"></p-button>
-                </div>
-            </ng-template>
+            <div class="flex justify-content-center p-3">
+                <p-button 
+                  [icon]="loading ? 'pi pi-spinner pi-spin' : formFilled ? 'pi pi-check' : 'pi pi-send'" 
+                  [label]="loading ? 'Enviando...' : 'Solicitar documento'"
+                  (onClick)="onSolicitar()" >
+                </p-button>
+            </div>
+
+            <div *ngIf="!formFilled && (solicitudForm.touched || solicitudForm.dirty)" class="mt-2 text-center">
+                <small class="p-error">Por favor complete todos los campos requeridos</small>
+            </div>
         </div>
     </p-card>
 
@@ -83,42 +94,3 @@
         </div>
     </p-card>
 </div>
-
-
-<app-modal>
-    <form [formGroup]="userForm" class="p-fluid">
-        <div class="grid">
-            <div class="col-12 field-container">
-                <label for="id" class="block font-medium mb-2">ID <span class="text-danger">*</span></label>
-                <input id="id" type="text" pInputText formControlName="Id" class="mb-2" />
-                @if(userForm.get('Id')?.invalid && userForm.get('Id')?.touched) {
-                    <small class="p-error block mt-1">ID es requerido</small>
-                }
-            </div>
-            
-            <div class="col-12 field-container">
-                <label for="userId" class="block font-medium mb-2">User ID <span class="text-danger">*</span></label>
-                <input id="userId" type="text" pInputText formControlName="UserID" class="mb-2" />
-                @if(userForm.get('UserID')?.invalid && userForm.get('UserID')?.touched) {
-                    <small class="p-error block mt-1">User ID es requerido</small>
-                }
-            </div>
-            
-            <div class="col-12 field-container">
-                <label for="userTypeId" class="block font-medium mb-2">Tipo Usuario <span class="text-danger">*</span></label>
-                <app-select formControlName="UserTypeId" [options]="userTypeOptions" optionLabel="label" optionValue="value" placeholder="Seleccione un tipo de usuario" class="mb-2"></app-select>
-                @if(userForm.get('UserTypeId')?.invalid && userForm.get('UserTypeId')?.touched) {
-                    <small class="p-error block mt-1">Tipo de Usuario es requerido</small>
-                }
-            </div>
-            
-            <div class="col-12 field-container">
-                <label for="userSubTypeId" class="block font-medium mb-2">Subtipo Usuario <span class="text-danger">*</span></label>
-                <app-select formControlName="UserSubTypeId" [options]="userSubTypeOptions" optionLabel="label" optionValue="value" placeholder="Seleccione un subtipo de usuario" class="mb-2"></app-select>
-                @if(userForm.get('UserSubTypeId')?.invalid && userForm.get('UserSubTypeId')?.touched) {
-                    <small class="p-error block mt-1">Subtipo de Usuario es requerido</small>
-                }
-            </div>
-        </div>
-    </form>
-</app-modal>

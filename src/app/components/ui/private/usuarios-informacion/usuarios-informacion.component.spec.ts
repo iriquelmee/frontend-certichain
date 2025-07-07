@@ -36,10 +36,10 @@ describe('UsuariosInformacionComponent', () => {
     // configuracion de retornos de los mocks
     userDataServiceMock.getByUserID.and.returnValue(of({
       id: '123',
-      userID: 'ghost',
+      userID: 'f4e8c4d8-e071-70f0-2026-9c8fa097b89f',
       name: 'ghost',
-      userTypeId: 'user',
-      userSubTypeId: 'user',
+      userTypeId: '',
+      userSubTypeId: '',
       status: 'active'
     }));
 

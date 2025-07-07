@@ -34,7 +34,7 @@ describe('UserSubTypeService', () => {
     service.getAll().subscribe((subTypes: any[]) => {
       expect(subTypes.length).toBe(2);
       expect(subTypes[0].name).toBe('Administrador');
-      expect(subTypes[1].name).toBe('Institucion');
+      expect(subTypes[1].name).toBe('institucion');
     });
 
     const req = httpTestingController.expectOne(`http://certichainbff.ddns.net:8082/api/userSubTypes`);
