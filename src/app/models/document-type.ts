@@ -1,5 +1,5 @@
 export interface DocumentType {
-    id: string;
+    id: string | null;
     userID: string;
     name: string;
     state: string;

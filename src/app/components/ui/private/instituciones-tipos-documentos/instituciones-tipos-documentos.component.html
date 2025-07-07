@@ -4,8 +4,49 @@
     </div>
 </div>
 
-<div class="grid">
-    <div class="col-12">
-        <app-table [data]="data" [columns]="tableInstitucionTiposDocumentoColumns" [rows]="5" label="documentos"></app-table>
+<div>
+  <!--<form (ngSubmit)="onSearch()">
+    <h3>Buscar Tipo Documento</h3>
+    <div>
+      <label>ID</label>
+      <input type="text" [(ngModel)]="searchId" name="searchId"/>
     </div>
+    <div>
+      <label>Nombre</label>
+      <input type="text" [(ngModel)]="searchNombre" name="searchNombre"/>
+    </div>
+    <button type="submit">Buscar</button>
+  </form> -->
+
+  <form (ngSubmit)="onCreate()">
+    <h3>Crear Tipo Documento</h3>
+    <div>
+      <label>Nombre Tipo Documento</label>
+      <input type="text" [(ngModel)]="createNombre" name="createNombre"/>
+    </div>
+    <button type="submit">Crear</button>
+  </form>
 </div>
+
+<table class="results-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre Tipo</th>
+      <th>Estado</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of filteredTypes; let i = index">
+      <td>{{ item.id }}</td>
+      <td>{{ item.name }}</td>
+      <td>{{ item.state }}</td>
+      <td>
+        <a href="#" (click)="toggleEstado(item); $event.preventDefault()">
+          {{ item.state === 'Activo' ? 'Desactivar' : 'Activar' }}
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
