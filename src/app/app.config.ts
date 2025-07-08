@@ -9,7 +9,6 @@ import { routes } from './app.routes';
 import { authConfig } from './auth/auth.config';
 import { provideAuth } from 'angular-auth-oidc-client';
 import { authInterceptor } from './interceptors/auth.interceptor';
-import { corsInterceptor } from './interceptors/cors.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptorsFromDi(),
-      withInterceptors([corsInterceptor, authInterceptor])),
+    withInterceptors([authInterceptor])),
     providePrimeNG({
         theme: {
             preset: Aura
