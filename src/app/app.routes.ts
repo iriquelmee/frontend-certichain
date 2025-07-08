@@ -8,6 +8,7 @@ import { Error400Component } from './components/ui/sys/error-400/error-400.compo
 import { Error500Component } from './components/ui/sys/error-500/error-500.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminComponent } from './components/ui/private/admin/admin.component';
+import { DashboardComponent } from './components/ui/private/dashboard/dashboard.component';
 
 export const routes: Routes = [
     {
@@ -29,7 +30,13 @@ export const routes: Routes = [
     },
     {
       path: 'admin',
-      component: AdminComponent      
+      component: AdminComponent,
+      canActivate: [AuthGuard]     
+    },
+    {
+      path: 'dashboard',
+      component: DashboardComponent,
+      canActivate: [AuthGuard]
     },
     {
       path: 'instituciones',
