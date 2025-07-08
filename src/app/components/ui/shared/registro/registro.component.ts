@@ -28,6 +28,7 @@ export class RegistroComponent implements OnInit {
   subtitle: string = "Crea tu cuenta para acceder a la plataforma";
   loading = false;
   errorMessage = '';
+  successMessage = '';
   registroForm!: FormGroup;
 
   perfilOptions = [
@@ -70,7 +71,8 @@ export class RegistroComponent implements OnInit {
     
       localStorage.setItem('temp_confirm_username', username);
       
-      this.errorMessage = 'Registro exitoso. Ahora debes verificar tu cuenta con el código enviado a tu correo.';
+      this.successMessage = 'Registro exitoso. Ahora debes verificar tu cuenta con el código enviado a tu correo.';
+      this.errorMessage = '';
       
       setTimeout(() => {
         this.router.navigate(['/confirmar-registro']);
@@ -78,6 +80,7 @@ export class RegistroComponent implements OnInit {
     } 
     catch (error: any) {
       this.errorMessage = error.message || 'Error al registrar usuario.';
+      this.successMessage = '';
     } 
     finally {
       this.loading = false;

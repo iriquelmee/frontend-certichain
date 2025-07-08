@@ -36,6 +36,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    
+    if (this.authService.isAuthenticated) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   initForm(): void {

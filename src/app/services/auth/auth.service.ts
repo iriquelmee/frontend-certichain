@@ -8,7 +8,7 @@ import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribu
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private jwtToken: string|null = null;
-  private authStateSubject = new BehaviorSubject<AuthState>({user: null, isLoading: false, error: null});
+  private authStateSubject = new BehaviorSubject<AuthState>({user: null, isLoading: false, error: null, successMessage: null});
   public authState$ = this.authStateSubject.asObservable();
   private userPool: CognitoUserPool;
 
@@ -167,7 +167,7 @@ export class AuthService {
         
         if (result) {
           console.log('Registro exitoso, verificación requerida:', !result.userConfirmed);
-          this.setError(result.userConfirmed ? 'Registro exitoso, ya puede iniciar sesión' : 'Registro exitoso, por favor verifique su correo electrónico');
+          this.setSuccess(result.userConfirmed ? 'Registro exitoso, ya puede iniciar sesión' : 'Registro exitoso, por favor verifique su correo electrónico');
           resolve(result);
         }
       });
@@ -191,7 +191,7 @@ export class AuthService {
           return;
         }
         
-        this.setError('Registro confirmado, ya puede iniciar sesión');
+        this.setSuccess('Registro confirmado, ya puede iniciar sesión');
         resolve(result);
       });
     });
@@ -205,26 +205,63 @@ export class AuthService {
       groups: userData['cognito:groups'] || [],
       isAuthenticated: true
     };
-    this.authStateSubject.next({ user, isLoading: false, error: null });
+    this.authStateSubject.next({ user, isLoading: false, error: null, successMessage: null });
   }
 
   private setLoading(): void {
-    this.authStateSubject.next({ ...this.authStateSubject.value, isLoading: true, error: null });
+    this.authStateSubject.next({ ...this.authStateSubject.value, isLoading: true, error: null, successMessage: null });
   }
 
   private setError(message: string): void {
-    this.authStateSubject.next({ ...this.authStateSubject.value, isLoading: false, error: message });
+    this.authStateSubject.next({ ...this.authStateSubject.value, isLoading: false, error: message, successMessage: null });
+  }
+
+  private setSuccess(message: string): void {
+    this.authStateSubject.next({ ...this.authStateSubject.value, isLoading: false, error: null, successMessage: message });
   }
 
   logout(): void {
     const cognitoUser = this.userPool.getCurrentUser();
     if (cognitoUser) {
       cognitoUser.signOut();
-      this.authStateSubject.next({ user: null, isLoading: false, error: null });
+      this.authStateSubject.next({ user: null, isLoading: false, error: null, successMessage: null });
       window.sessionStorage.clear();
       window.localStorage.clear();
       this.router.navigate(['/login']);
     }
+  }
+  
+
+  forceLogout(): void {
+    try {
+      const cognitoUser = this.userPool.getCurrentUser();
+      if (cognitoUser) {
+        cognitoUser.signOut();
+      }
+    } 
+    catch (e) {
+      console.error('Error al cerrar sesión de Cognito:', e);
+    }
+    
+    this.jwtToken = null;
+    this.authStateSubject.next({ user: null, isLoading: false, error: null, successMessage: null });
+    
+
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      
+
+      document.cookie.split(";").forEach(c => {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+    } 
+    catch (e) {
+      console.error('Error al limpiar almacenamiento:', e);
+    }
+    
+
+    this.router.navigate(['/login']);
   }
 
   get currentUser(): User | null {

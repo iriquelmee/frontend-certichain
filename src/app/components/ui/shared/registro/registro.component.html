@@ -10,6 +10,12 @@
         </div>
       }
 
+      @if(successMessage) {
+        <div class="success-message">
+          {{ successMessage }}
+        </div>
+      }
+
       <form [formGroup]="registroForm" (ngSubmit)="onRegistro()">
         <div class="form-field">
           <label for="username">Nombre de Usuario</label>

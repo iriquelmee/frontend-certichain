@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -26,8 +26,10 @@ export class ConfirmarRegistroComponent implements OnInit {
   subtitle: string = "Ingresa el código de verificación que recibiste por correo";
   loading = false;
   errorMessage = '';
+  successMessage = '';
   confirmarForm!: FormGroup;
   username: string = '';
+  private authSubscription: any;
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +47,18 @@ export class ConfirmarRegistroComponent implements OnInit {
     }
     
     this.initForm();
+    
+    this.authSubscription = this.authService.authState$.subscribe(authState => {
+      this.loading = authState.isLoading;
+      this.errorMessage = authState.error || '';
+      this.successMessage = authState.successMessage || '';
+    });
+  }
+  
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   initForm(): void {
@@ -59,9 +73,6 @@ export class ConfirmarRegistroComponent implements OnInit {
       return;
     }
 
-    this.errorMessage = '';
-    this.loading = true;
-
     try {
       const { username, code } = this.confirmarForm.value;
       await this.authService.confirmRegistration(username, code);
@@ -72,10 +83,7 @@ export class ConfirmarRegistroComponent implements OnInit {
       }, 2000);
     } 
     catch (error: any) {
-      this.errorMessage = error.message || 'Error al confirmar el registro.';
-    } 
-    finally {
-      this.loading = false;
+      console.error('Error en confirmación:', error);
     }
   }
 
