@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserData } from '../../models/user-data';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserDataService {
-    private readonly baseUrl = `http://certichainbff.ddns.net:8082/api/userdata`;
+    private readonly baseUrl = `${environment.apiUrl}/userdata`;
 
     constructor(private readonly http: HttpClient) { }
 

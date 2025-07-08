@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DocumentType } from '../../models/document-type';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DocumentTypeService {
-    private baseUrl = `http://certichainbff.ddns.net:8082/api/documenttypes`;
+    private baseUrl = `${environment.apiUrl}/documenttypes`;
 
     constructor(private http: HttpClient) { }
 

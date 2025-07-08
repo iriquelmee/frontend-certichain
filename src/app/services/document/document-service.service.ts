@@ -4,13 +4,14 @@ import { DocumentRequest } from '../../models/document-request';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SearchDocumentRequestInfo } from '../../models/search-document-request-info';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DocumentServiceService {
 
-    private baseUrl = `http://certichainbff.ddns.net:8082/api/document`;
+    private baseUrl = `${environment.apiUrl}/document`;
 
     constructor(private http: HttpClient) { }
 

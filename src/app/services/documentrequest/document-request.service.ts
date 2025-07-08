@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { DocumentRequest } from '../../models/document-request';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DocumentRequestService {
-    private baseUrl = `http://certichainbff.ddns.net:8082/api/requests`;
+    private baseUrl = `${environment.apiUrl}/requests`;
 
     constructor(private http: HttpClient) { }
 

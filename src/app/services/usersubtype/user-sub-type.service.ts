@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserSubType } from '../../models/user-sub-type';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserSubTypeService {
-    private baseUrl = `http://certichainbff.ddns.net:8082/api/userSubTypes`;
+    private baseUrl = `${environment.apiUrl}/userSubTypes`;
 
     constructor(private http: HttpClient) { }
 

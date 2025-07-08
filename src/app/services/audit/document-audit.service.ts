@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PrivateDocumentAuditLog } from '../../models/private-document-audit-log';
 import { PublicDocumentAuditLog } from '../../models/public-document-audit-log';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DocumentAuditService {
-    private baseUrl = `http://certichainbff.ddns.net:8082/api/audit`;
+    private baseUrl = `${environment.apiUrl}/audit`;
 
     constructor(private http: HttpClient) { }
 
