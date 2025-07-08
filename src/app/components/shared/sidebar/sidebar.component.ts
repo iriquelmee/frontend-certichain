@@ -44,7 +44,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private buildMenuItems() {
-    this.items = sidebarItems;
+    // filtrando items para eliminar cualquier boton de login/logout sobrante
+    const filteredItems = sidebarItems.filter(item => 
+      item.label !== 'Login' && item.label !== 'Logout'
+    );
+    
+    this.items = [...filteredItems];
 
     if (this.isAuthenticated) {
       this.items.push({
