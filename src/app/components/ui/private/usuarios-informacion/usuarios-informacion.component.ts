@@ -172,11 +172,21 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
       const docSub = this.documentService.userSearchRequests(currentUser.id).subscribe({
         next: (docs: SearchDocumentRequestInfo[]) => {
           if (docs && docs.length > 0) {
+            console.log('Documentos recibidos:', docs);
             this.documentos = docs.map((doc: SearchDocumentRequestInfo) => {
+              //seteando data y buscando info para mostrar en tabla
+              const documentTypeId = doc.documentRequest?.documentTypeID;
+              const institutionId = doc.documentRequest?.issuerID;
+              
+              const documentName = this.findDocumentTypeName(documentTypeId || '');
+              const institutionName = this.findInstitutionName(institutionId || '');
+              
+              console.log('Mapeando documento:', {documentTypeId,documentName,institutionId,institutionName});
+              
               return {
-                name: doc.privateDocument?.name || 'Documento sin nombre',
+                name: documentName || 'Documento sin nombre',
                 date: new Date(doc.documentRequest?.date || '').toLocaleDateString(),
-                institution: doc.privateDocument?.institution || 'Sin institucion',
+                institution: institutionName || 'Sin institución',
                 action: 'Descargar Visualizar'
               };
             });
@@ -313,7 +323,6 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
     });
 
     if (this.formFilled) {
-
       const currentUser = this.authService.currentUser;
 
       if (!currentUser || !currentUser.id) {
@@ -321,15 +330,27 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
         return;
       }
 
-      console.log('Enviando solicitud con datos:', this.solicitudForm.value);
+      // obteniendo y validando data del formulario
+      const institucionId = this.solicitudForm.value.institucion;
+      const documentoId = this.solicitudForm.value.documento;
+
+      // validando data vacia
+      if (!institucionId || !documentoId) {
+        this.toastService.error('Error', 'Institución y tipo de documento son obligatorios');
+        return;
+      }
+
+      // mandando objeto solicitud
       const docRequest: DocumentRequest = {
         id: null,
         requesterID: currentUser.id,
-        issuerID: this.solicitudForm.value.institucion,
+        issuerID: institucionId.trim(),
         date: new Date().toISOString(),
-        documentTypeID: this.solicitudForm.value.documento,
+        documentTypeID: documentoId.trim(),
         state: 'CREADO'
       };
+
+      console.log('Enviando solicitud con datos:', JSON.stringify(docRequest, null, 2));
 
       this.loading = true;
       this.documentService.createRequest(docRequest).subscribe({
@@ -353,5 +374,21 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
       this.toastService.error('Error', 'Por favor complete todos los campos requeridos');
     }
   }
+
+    // buscando nombre de la institucion con id mongo
+    findInstitutionName(institutionId: string): string {
+      if (!institutionId) return 'Sin institución';
+      
+      const institution = this.instituciones.find(inst => inst.value === institutionId);
+      return institution ? institution.label : 'Institución no encontrada';
+    }
+  
+    // buscandonombre del tipo de documentocon id mongo
+    findDocumentTypeName(documentTypeId: string): string {
+      if (!documentTypeId) return 'Sin tipo de documento';
+      
+      const documentType = this.tiposDocumentos.find(type => type.value === documentTypeId);
+      return documentType ? documentType.label : 'Tipo de documento no encontrado';
+    }
 
 }

@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DocumentRequest } from '../../models/document-request';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { SearchDocumentRequestInfo } from '../../models/search-document-request-info';
 
 @Injectable({
@@ -14,7 +15,23 @@ export class DocumentServiceService {
     constructor(private http: HttpClient) { }
 
     createRequest(doc: DocumentRequest): Observable<DocumentRequest> {
-        return this.http.post<DocumentRequest>(`${this.baseUrl}`, doc);
+        console.log('DocumentService - Enviando solicitud:', JSON.stringify(doc, null, 2));
+        
+        // validando id de objetos mongo
+        if (!doc.requesterID || !doc.issuerID || !doc.documentTypeID) {
+            console.warn('DocumentService - Solicitud con IDs faltantes:', {
+                requesterID: doc.requesterID ? 'presente' : 'faltante',
+                issuerID: doc.issuerID ? 'presente' : 'faltante',
+                documentTypeID: doc.documentTypeID ? 'presente' : 'faltante'
+            });
+        }
+        
+        return this.http.post<DocumentRequest>(`${this.baseUrl}`, doc).pipe(
+            catchError(error => {
+                console.error('DocumentService - Error en la solicitud HTTP:', error);
+                return throwError(() => new Error('Error al crear la solicitud: ' + (error.message || 'Error de servidor')));
+            })
+        );
     }
 
     discardRequest(id: string): Observable<DocumentRequest> {
