@@ -24,8 +24,8 @@
       <td *ngFor="let col of columns">
         <!-- columna especial para acciones -->
         <ng-container *ngIf="showActions && col.campo === 'actions'">
-          <a href="#" (click)="handleEdit(row); $event.preventDefault()">Editar</a> |
-          <a href="#" (click)="handleToggleActive(row); $event.preventDefault()">
+          <a style="margin: 0.5rem;" href="#" class="p-link" (click)="handleEdit(row); $event.preventDefault()">Editar</a>
+          <a style="margin: 0.5rem;" href="#" class="p-link" (click)="handleToggleActive(row); $event.preventDefault()">
             {{ row.status === 'Activo' ? 'Desactivar' : 'Activar' }}
           </a>
         </ng-container>
