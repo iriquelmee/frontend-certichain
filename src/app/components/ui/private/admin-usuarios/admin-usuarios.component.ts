@@ -10,13 +10,13 @@ import { UserType } from '../../../../models/user-type';
 import { UserSubType } from '../../../../models/user-sub-type';
 import { UserSubTypeService } from '../../../../services/usersubtype/user-sub-type.service';
 import { UserTypeService } from '../../../../services/usertype/user-type.service';
-
+import { TableComponent } from '../../../shared/table/table.component';
+import { SelectComponent } from '../../../shared/select/select.component';
+import { ButtonComponent } from '../../../shared/button/button.component';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
     selector: 'app-admin-usuarios',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        CardModule],
+    imports: [CommonModule,ReactiveFormsModule,CardModule,TableComponent,SelectComponent,ButtonComponent,InputTextModule],
     templateUrl: './admin-usuarios.component.html',
     styleUrl: './admin-usuarios.component.scss'
 })
@@ -24,7 +24,10 @@ export class AdminUsuariosComponent {
     title: string = "Usuarios ";
     searchForm!: FormGroup;
     editForm!: FormGroup;
+
+    tableColumns: any[] = [];
     filteredUsers: UserData[] = [];
+
     selectedUser: UserData | null = null;
 
     tipos: UserType[] = [];
@@ -75,6 +78,8 @@ export class AdminUsuariosComponent {
         this.userDataService.getAll().subscribe({
             next: (data) => {
                 this.filteredUsers = data;
+                console.log("this.filteredUsers", this.filteredUsers);
+                this.setTableColumnsHeaders();
             },
             error: (err) => {
                 console.error('Error al buscar usuarios:', err);
@@ -136,5 +141,14 @@ export class AdminUsuariosComponent {
         const type = this.tipos.find(t => t.id === id);
         return type ? type.name : id;
     }
+
+    setTableColumnsHeaders() {
+        this.tableColumns = [
+          { header: 'Nombre', campo: 'name' },
+          { header: 'Tipo', campo: 'userTypeId' },
+          { header: 'Estado', campo: 'status' },
+          { header: 'Acción', campo: 'actions' }
+        ];
+      }
 
 }

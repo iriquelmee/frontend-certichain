@@ -1,40 +1,35 @@
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-  gap: 1rem;
-  margin: 1rem;
+:host ::ng-deep {
+  h3{
+    margin: 0.5rem;
+  }
+  .p-card {
+    margin-bottom: 1.5rem;
+    background-color: whitesmoke;
+    .p-card-content {
+      margin: 0.5rem;
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .p-card {
+      margin-bottom: 1.5rem;
+      background-color: #121212;
+      color: #e0e0e0;
+      
+      .p-card-content {
+        margin: 0.5rem;
+      }
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .p-card .p-card-content {
+      padding: 1rem;
+    }
+    
+    .field-container {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
 }
-.panel {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 4px;
-}
-.wide { grid-column: span 2; }
-.form-inline {
-  display: flex;
-  gap: .5rem;
-  align-items: flex-end;
-}
-.form-stack .field {
-  margin-bottom: .75rem;
-  display: flex;
-  flex-direction: column;
-}
-.field { display: flex; flex-direction: column; }
-.field.switch { flex-direction: row; align-items: center; gap: .5rem; }
-.actions {
-  display: flex;
-  gap: .5rem;
-  margin-top: .5rem;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th, td {
-  padding: .5rem;
-  border-bottom: 1px solid #ddd;
-}
-th { text-align: left; }
-a { color: #007bff; text-decoration: none; cursor: pointer; }
-a:hover { text-decoration: underline; }
