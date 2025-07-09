@@ -31,7 +31,8 @@ export const routes: Routes = [
     {
       path: 'admin',
       component: AdminComponent,
-      canActivate: [AuthGuard]     
+      canActivate: [AuthGuard],
+      data: { roles: ['Admin'] }     
     },
     {
       path: 'dashboard',
@@ -41,12 +42,14 @@ export const routes: Routes = [
     {
       path: 'instituciones',
       component: InstitucionesComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard],
+      data: { roles: ['Institucion'] }
     },
     {
       path: 'usuarios',
       component: UsuariosComponent,
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard],
+      data: { roles: ['Usuario'] }
     },
     {
       path: 'error-400',

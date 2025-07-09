@@ -7,17 +7,20 @@ export const sidebarItems = [
     {
       label: 'Administracion',
       icon: 'pi pi-fw pi-cog',
-      routerLink: '/admin'
+      routerLink: '/admin',
+      role: 'Admin'
     },   
     {
       label: 'Instituciones',
       icon: 'pi pi-fw pi-building',
-      routerLink: '/instituciones'
+      routerLink: '/instituciones',
+      role: 'Institucion'
     },
     {
       label: 'Usuarios',
       icon: 'pi pi-fw pi-users',
-      routerLink: '/usuarios'
+      routerLink: '/usuarios',
+      role: 'Usuario'
     },
     {
       separator: true

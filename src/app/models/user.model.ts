@@ -4,6 +4,8 @@ export interface User {
   email?: string;
   groups?: string[];
   isAuthenticated: boolean;
+  userTypeId?: string;
+  userTypeName?:string;
 }
 
 export interface AuthState {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://certichainbff.ddns.net:8082/api',
+  apiUrl: 'https://certichain-bff.ddns.net/api',
   auth: {
     // Propiedades oidc-client
     authority: 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ayaSovM5b',
