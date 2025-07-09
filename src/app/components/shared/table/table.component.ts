@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -12,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
   styleUrl: './table.component.scss',
   imports: [CommonModule, TableModule, ButtonModule, InputTextModule, FormsModule]
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnChanges {
 
   @Input() data: any[] = [];
   @Input() columns: any[] = [];
@@ -21,8 +21,12 @@ export class TableComponent implements OnInit {
   @Input() showCurrentPageReport: boolean = true;
   @Input() currentPageReportTemplate: string = 'Mostrando {first} hasta {last} de {totalRecords} registros';
   @Input() tableStyle: { [klass: string]: any } = { width: '100%' };
+  @Input() showActions: boolean = false;
+  @Input() getUserTypeName: Function = (id: string) => id;
 
   @Output() onPageChange = new EventEmitter<any>();
+  @Output() onEdit = new EventEmitter<any>();
+  @Output() onToggleActive = new EventEmitter<any>();
 
   first: number = 0;
   filteredData: any[] = [];
@@ -32,35 +36,36 @@ export class TableComponent implements OnInit {
     this.filteredData = [...this.data];
   }
 
-  ngOnChanges() {
-    this.filteredData = [...this.data];
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data']) {
+      if (this.searchValue && this.searchValue.trim()) {
+        this.filterData();
+      } 
+      else {
+        this.filteredData = [...this.data];
+      }
+    }
   }
 
   filterData() {
     if (!this.searchValue.trim()) {
       this.filteredData = [...this.data];
-    } else {
-      this.filteredData = this.data.filter(item => {
-        return this.columns.some(col => {
-          let value;
-          
-          // usa label si esta disponible para determinar como acceder a los datos
-          if (this.label && col.campo.startsWith(this.label + '.')) {
-            // si el campo comienza con el label, ej:user.name, eliminar el prefijo
-            const campoSinLabel = col.campo.substring(this.label.length + 1);
-            value = this.getCamposAnidados(item, campoSinLabel);
-          } 
-          else {
-            // cualquier cosa
-            value = col.campo.includes('.') ? 
-              this.getCamposAnidados(item, col.campo) : 
-              item[col.campo];
-          }
-          
-          return value && value.toString().toLowerCase().includes(this.searchValue.toLowerCase());
-        });
-      });
+      return;
     }
+
+    const searchText = this.searchValue.toLowerCase();
+    
+    // aplicando filtro para toda la data
+    this.filteredData = this.data.filter(row => {
+      try {
+        const rowStr = JSON.stringify(row).toLowerCase();
+        return rowStr.includes(searchText);
+      } catch (e) {
+        console.warn('Error filtering row:', e);
+        return false;
+      }
+    });
+    
     this.first = 0;
   }
 
@@ -98,5 +103,13 @@ export class TableComponent implements OnInit {
 
   isFirstPage(): boolean {
     return this.first === 0;
+  }
+
+  handleEdit(row: any) {
+    this.onEdit.emit(row);
+  }
+
+  handleToggleActive(row: any) {
+    this.onToggleActive.emit(row);
   }
 }

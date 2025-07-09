@@ -22,11 +22,25 @@
   <ng-template pTemplate="body" let-row>
     <tr>
       <td *ngFor="let col of columns">
-        <span class="p-column-title">{{ col.header }}</span>
-        <ng-container *ngIf="label && col.campo.startsWith(label + '.')">
+        <!-- columna especial para acciones -->
+        <ng-container *ngIf="showActions && col.campo === 'actions'">
+          <a href="#" (click)="handleEdit(row); $event.preventDefault()">Editar</a> |
+          <a href="#" (click)="handleToggleActive(row); $event.preventDefault()">
+            {{ row.status === 'Activo' ? 'Desactivar' : 'Activar' }}
+          </a>
+        </ng-container>
+        
+        <!-- columna especial para tipo de usuario -->
+        <ng-container *ngIf="col.campo === 'userTypeId' && !label">
+          {{ getUserTypeName(row[col.campo]) }}
+        </ng-container>
+        
+        <!-- columnas normales -->
+        <ng-container *ngIf="label && col.campo.startsWith(label + '.') && col.campo !== 'actions' && col.campo !== 'userTypeId'">
           {{ getCamposAnidados(row, col.campo.substring(label.length + 1)) }}
         </ng-container>
-        <ng-container *ngIf="!label || !col.campo.startsWith(label + '.')">
+        
+        <ng-container *ngIf="(!label || !col.campo.startsWith(label + '.')) && col.campo !== 'actions' && col.campo !== 'userTypeId'">
           {{ col.campo.includes('.') ? getCamposAnidados(row, col.campo) : row[col.campo] }}
         </ng-container>
       </td>
