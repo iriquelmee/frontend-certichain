@@ -25,6 +25,7 @@ export class SelectComponent implements ControlValueAccessor {
   @Input() placeholder: string = 'Seleccionar';
   @Input() disabled: boolean = false;
   @Input() styleClass: string = '';
+  @Output() valueChange = new EventEmitter<any>();
   
   value: any;
   onChange: any = () => {};
@@ -50,5 +51,6 @@ export class SelectComponent implements ControlValueAccessor {
     this.value = event.value;
     this.onChange(this.value);
     this.onTouched();
+    this.valueChange.emit(this.value);
   }
 }

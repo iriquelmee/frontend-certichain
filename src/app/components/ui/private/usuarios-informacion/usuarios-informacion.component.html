@@ -34,7 +34,7 @@
                             <i class="pi pi-spinner pi-spin mr-2"></i>
                             <span> Cargando instituciones...</span>
                         </div>
-                        <app-select *ngIf="!loadingInstituciones && !noInstituciones" formControlName="institucion" [options]="instituciones" optionLabel="label" optionValue="value" placeholder="Seleccione una institución" styleClass="w-full"></app-select>
+                        <app-select *ngIf="!loadingInstituciones && !noInstituciones" formControlName="institucion" [options]="instituciones" optionLabel="label" optionValue="value" placeholder="Seleccione una institución" (valueChange)="onSelectInstitution($event)" styleClass="w-full"></app-select>
                 <div *ngIf="noInstituciones" class="p-3 border-1 border-round surface-overlay">
                     <div class="flex align-items-center justify-content-center flex-column">
                         <i class="pi pi-exclamation-triangle text-lg mb-2 text-yellow-500"></i>

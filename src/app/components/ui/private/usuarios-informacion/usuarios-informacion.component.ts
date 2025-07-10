@@ -58,7 +58,6 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
     this.initSolicitudForm();
     this.getUserData();
     this.getInstituciones();
-    this.getTiposDocumentos();
     this.setTableColumnsHeaders();
     this.getDocumentos();
   }
@@ -251,13 +250,13 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTiposDocumentos() {
+  getTiposDocumentos(institutionId: string) {
     this.loadingTiposDocumentos = true;
     this.noTiposDocumentos = false;
     this.tiposDocumentos = [];
   
     try {
-      const docTypesSub = this.documentTypeService.getAll().subscribe({
+      const docTypesSub = this.documentTypeService.getByUserId(institutionId).subscribe({
         next: (tipos) => {
           this.loadingTiposDocumentos = false;
           
@@ -389,6 +388,13 @@ export class UsuariosInformacionComponent implements OnInit, OnDestroy {
       
       const documentType = this.tiposDocumentos.find(type => type.value === documentTypeId);
       return documentType ? documentType.label : 'Tipo de documento no encontrado';
+    }
+
+
+    onSelectInstitution(selectedValue: any){
+        if (typeof selectedValue === 'string') {
+           this.getTiposDocumentos(selectedValue); 
+        }
     }
 
 }
