@@ -6,10 +6,11 @@ import { UserSubTypeService } from '../../../../services/usersubtype/user-sub-ty
 import { UserType } from '../../../../models/user-type';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TableComponent } from '../../../shared/table/table.component';
 
 @Component({
     selector: 'app-admin-categoria',
-    imports: [CommonModule,FormsModule,CardModule],
+    imports: [CommonModule,FormsModule,CardModule,TableComponent],
     templateUrl: './admin-categoria.component.html',
     styleUrl: './admin-categoria.component.scss'
 })
@@ -19,6 +20,8 @@ export class AdminCategoriaComponent {
     userSubTypes: UserSubType[] = [];
     newUserTypeName = '';
     newUserSubTypeName = '';
+    userTypeColumns: any[] = [];
+    userSubTypeColumns: any[] = [];
 
     constructor(
         private userTypeSvc: UserTypeService,
@@ -28,6 +31,26 @@ export class AdminCategoriaComponent {
     ngOnInit() {
         this.loadUserTypes();
         this.loadUserSubTypes();
+        this.setUserTypeColumns();
+        this.setUserSubTypeColumns();
+    }
+    
+    setUserTypeColumns() {
+        this.userTypeColumns = [
+            { header: 'ID', campo: 'id' },
+            { header: 'Nombre', campo: 'name' },
+            { header: 'Estado', campo: 'state' },
+            { header: 'Acción', campo: 'actions' }
+        ];
+    }
+    
+    setUserSubTypeColumns() {
+        this.userSubTypeColumns = [
+            { header: 'ID', campo: 'id' },
+            { header: 'Nombre', campo: 'name' },
+            { header: 'Estado', campo: 'state' },
+            { header: 'Acción', campo: 'actions' }
+        ];
     }
 
     loadUserTypes() {

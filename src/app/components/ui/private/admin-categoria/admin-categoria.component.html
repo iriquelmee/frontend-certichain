@@ -1,74 +1,49 @@
-<p-card>
-    <div class="container">
-        
-        <section class="table-card">
-            <p-card>
-                <div class="header">
-                    <h2>Tipo Usuario</h2>
+<div class="grid" style="margin-bottom: 1rem;">
+    <div class="col-12">
+        <p-card>
+            <div class="grid">
+                <div class="col-12">
+                    <h3>Tipo Usuario</h3>
                     <div class="actions">
                         <input type="text" [(ngModel)]="newUserTypeName" placeholder="Nombre Tipo Usuario" />
                         <button (click)="createUserType()">Crear</button>
                     </div>
                 </div>
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let t of userTypes">
-                            <td>{{ t.id }}</td>
-                            <td>{{ t.name }}</td>
-                            <td>{{ t.state }}</td>
-                            <td>
-                                <a href="#" (click)="toggleUserTypeState(t); $event.preventDefault()">
-                                    {{ t.state === 'Activo' ? 'Desactivar' : 'Activar' }}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </p-card>
-        </section>
+                <app-table [data]="userTypes" [columns]="userTypeColumns" [showActions]="true" (onToggleActive)="toggleUserTypeState($event)" [rows]="10"></app-table>
 
-        <section class="table-card">
-            <p-card>
-                <div class="header">
-                    <h2>SubTipo Usuario</h2>
+                <div *ngIf="userTypes.length === 0" class="text-center p-5">
+                    <div class="flex align-items-center justify-content-center flex-column">
+                        <i class="pi pi-info-circle text-5xl mb-3 text-500"></i>
+                        <p class="text-xl text-500 mb-0">No se encontraron registros.</p>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<div class="grid" style="margin-bottom: 1rem;">
+    <div class="col-12">
+        <p-card>
+            <div class="grid">
+                <div class="col-12">
+                    <h3>Subtipo Usuario</h3>
                     <div class="actions">
                         <input type="text" [(ngModel)]="newUserSubTypeName" placeholder="Nombre SubTipo Usuario" />
                         <button (click)="createUserSubType()">Crear</button>
                     </div>
                 </div>
 
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let st of userSubTypes">
-                            <td>{{ st.id }}</td>
-                            <td>{{ st.name }}</td>
-                            <td>{{ st.state }}</td>
-                            <td>
-                                <a href="#" (click)="toggleUserSubTypeState(st); $event.preventDefault()">
-                                    {{ st.state === 'Activo' ? 'Desactivar' : 'Activar' }}
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </p-card>
-        </section>
+                <app-table [data]="userSubTypes" [columns]="userSubTypeColumns" [showActions]="true" (onToggleActive)="toggleUserSubTypeState($event)" [rows]="10"></app-table>
+
+                <div *ngIf="userSubTypes.length === 0" class="text-center p-5">
+                    <div class="flex align-items-center justify-content-center flex-column">
+                        <i class="pi pi-info-circle text-5xl mb-3 text-500"></i>
+                        <p class="text-xl text-500 mb-0">No se encontraron registros.</p>
+                    </div>
+                </div>
+            </div>
+        </p-card>
     </div>
-</p-card>
+</div>
