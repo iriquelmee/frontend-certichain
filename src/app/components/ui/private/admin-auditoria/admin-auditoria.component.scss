@@ -1,24 +1,35 @@
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-}
-
-.table a {
-  color: #007ad9;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.table a:hover {
-  text-decoration: underline;
-}
-
-.filters{
-    margin-bottom: 1rem;
+:host ::ng-deep {
+  h3{
+    margin: 0.5rem;
+  }
+  .p-card {
+    margin-bottom: 1.5rem;
+    background-color: whitesmoke;
+    .p-card-content {
+      margin: 0.5rem;
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .p-card {
+      margin-bottom: 1.5rem;
+      background-color: #121212;
+      color: #e0e0e0;
+      
+      .p-card-content {
+        margin: 0.5rem;
+      }
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .p-card .p-card-content {
+      padding: 1rem;
+    }
+    
+    .field-container {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
 }

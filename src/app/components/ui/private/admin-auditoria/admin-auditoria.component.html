@@ -1,46 +1,45 @@
-<p-card>
-    <div class="filters">
-        <label>
-            Emisor:
-            <input type="text" [(ngModel)]="emisor" placeholder="Emisor" />
-        </label>
-        <label>
-            Solicitante:
-            <input type="text" [(ngModel)]="solicitante" placeholder="Solicitante" />
-        </label>
-        <label>
-            Inicio:
-            <input type="date" [(ngModel)]="startDate" />
-        </label>
-        <label>
-            Fin:
-            <input type="date" [(ngModel)]="endDate" />
-        </label>
-        <button (click)="onSearchClick()">Buscar</button>
+<div class="grid">
+    <div class="col-12">
+        <p-card>
+            <div class="filters">
+                <label>
+                    Emisor:
+                    <input type="text" [(ngModel)]="emisor" placeholder="Emisor" />
+                </label>
+                <label>
+                    Solicitante:
+                    <input type="text" [(ngModel)]="solicitante" placeholder="Solicitante" />
+                </label>
+                <label>
+                    Inicio:
+                    <input type="date" [(ngModel)]="startDate" />
+                </label>
+                <label>
+                    Fin:
+                    <input type="date" [(ngModel)]="endDate" />
+                </label>
+                <button (click)="onSearchClick()">Buscar</button>
+            </div>
+        </p-card>
     </div>
+</div>
 
-    <div *ngIf="loading">Cargando...</div>
-    <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
-
-    <table class="table" *ngIf="!loading && logs.length">
-        <thead>
-            <tr>
-                <th>txID</th>
-                <th>Id Documento</th>
-                <th>Emisor</th>
-                <th>Solicitante</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let log of logs">
-                <td>{{ log.txID }}</td>
-                <td>{{ log.documentId }}</td>
-                <td>{{ log.institution }}</td>
-                <td>{{ log.userId }}</td>
-                <td>{{ log.timestamp | date:'dd-MM-yyyy' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div *ngIf="!loading && !logs.length">No se encontraron registros.</div>
-</p-card>
+<div class="grid" style="margin-bottom: 1rem;">
+    <div class="col-6">
+        <p-card>
+            <div class="grid">
+                <div class="col-12">
+                    <h3>Auditoria</h3>
+                </div>
+                <app-table *ngIf="!loading && logs.length > 0" [data]="logs" [columns]="tableColumns" [rows]="10">
+                </app-table>
+                <div *ngIf="!loading && logs.length === 0" class="text-center p-5">
+                    <div class="flex align-items-center justify-content-center flex-column">
+                        <i class="pi pi-info-circle text-5xl mb-3 text-500"></i>
+                        <p class="text-xl text-500 mb-0">No se encontraron registros.</p>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>

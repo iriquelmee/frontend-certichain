@@ -4,10 +4,11 @@ import { PublicDocumentAuditLog } from '../../../../models/public-document-audit
 import { DocumentAuditService } from '../../../../services/audit/document-audit.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TableComponent } from '../../../shared/table/table.component';
 
 @Component({
     selector: 'app-admin-auditoria',
-    imports: [CommonModule, CardModule, FormsModule],
+    imports: [CommonModule, CardModule, FormsModule, TableComponent],
     templateUrl: './admin-auditoria.component.html',
     styleUrl: './admin-auditoria.component.scss'
 })
@@ -23,6 +24,7 @@ export class AdminAuditoriaComponent {
     logs: PublicDocumentAuditLog[] = [];
     loading = false;
     errorMsg: string | null = null;
+    tableColumns: any[] = [];
 
     constructor(private auditSvc: DocumentAuditService) { }
 
@@ -34,7 +36,18 @@ export class AdminAuditoriaComponent {
         this.startDate = past.toISOString().slice(0, 16);
         this.endDate = now.toISOString().slice(0, 16);
 
+        this.setTableColumns();
         this.search();
+    }
+
+    setTableColumns() {
+        this.tableColumns = [
+            { header: 'txID', campo: 'txID' },
+            { header: 'Id Documento', campo: 'documentId' },
+            { header: 'Emisor', campo: 'institution' },
+            { header: 'Solicitante', campo: 'userId' },
+            { header: 'Fecha', campo: 'timestamp' }
+        ];
     }
 
     private toRfc3339(date: string, isEnd: boolean = false): string {
