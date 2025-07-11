@@ -12,10 +12,15 @@ import { UserDataService } from '../../../../services/userdata/user-data.service
 import { CommonModule } from '@angular/common';
 import { DocumentTypeService } from '../../../../services/documenttype/document-type.service';
 import { DocumentType } from '../../../../models/document-type';
+import { TableComponent } from '../../../shared/table/table.component';
+import { SelectComponent } from '../../../shared/select/select.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonComponent } from '../../../shared/button/button.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-instituciones-otras-solicitudes',
-    imports: [CommonModule, CardModule, ReactiveFormsModule, FormsModule],
+    imports: [CommonModule, CardModule, ReactiveFormsModule, FormsModule, TableComponent, SelectComponent, InputTextModule, ButtonComponent, DatePickerModule],
     templateUrl: './instituciones-otras-solicitudes.component.html',
     styleUrl: './instituciones-otras-solicitudes.component.scss'
 })
@@ -35,6 +40,7 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
     institutions: UserData[] = [];
     results: SearchDocumentRequestInfo[] = [];
     documentsType: DocumentType[] = [];
+    requestColumns: any[] = [];
 
     loading = false;
     errorMsg: string | null = null;
@@ -51,6 +57,7 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
     ngOnInit(): void {
         const currentUser = this.authService.currentUser;
         this.getUserTypes();
+        this.setRequestColumns();
         
 
         this.requestForm = this.fb.group({
@@ -156,7 +163,19 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
         this.docSvc.userSearchRequests(this.userData.Id, emisor, inicio, fin)
             .subscribe({
                 next: data => {
-                    this.results = data;
+                    // Formatear fechas para la tabla
+                    this.results = data.map(item => {
+                        if (item.documentRequest && item.documentRequest.date) {
+                            const date = new Date(item.documentRequest.date);
+                            const formattedDate = date.toLocaleDateString('es-ES', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            return {...item,documentRequest: {...item.documentRequest,issuerID: this.getInstitutionName(item.documentRequest.issuerID),date: formattedDate}};
+                        }
+                        return item;
+                    });
                     this.loading = false;
                 },
                 error: err => {
@@ -169,6 +188,16 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
     getInstitutionName(id: string): string{
         const intitution = this.institutions.find(item => item.id === id);
         return intitution ? intitution.name : id;
+    }
+    
+    setRequestColumns() {
+        this.requestColumns = [
+            { header: 'ID', campo: 'documentRequest.id' },
+            { header: 'Emisor', campo: 'documentRequest.issuerID' },
+            { header: 'Nombre', campo: 'privateDocument.name' },
+            { header: 'Fecha', campo: 'documentRequest.date' },
+            { header: 'Estado', campo: 'documentRequest.state' }
+        ];
     }
 
 }

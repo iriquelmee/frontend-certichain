@@ -12,10 +12,14 @@ import { UserDataService } from '../../../../services/userdata/user-data.service
 import { UserType } from '../../../../models/user-type';
 import { UserData } from '../../../../models/user-data';
 import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
+import { TableComponent } from '../../../shared/table/table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonComponent } from '../../../shared/button/button.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-instituciones-solicitudes',
-    imports: [CardModule, CommonModule, ReactiveFormsModule, FormsModule],
+    imports: [CardModule, CommonModule, ReactiveFormsModule, FormsModule, TableComponent, InputTextModule, ButtonComponent, DatePickerModule],
     templateUrl: './instituciones-solicitudes.component.html',
     styleUrl: './instituciones-solicitudes.component.scss'
 })
@@ -33,6 +37,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     institutions: UserData[] = [];
     results: SearchDocumentRequestInfo[] = [];
     selectedRequest: SearchDocumentRequestInfo | null = null;
+    requestColumns: any[] = [];
 
     loading = false;
     errorMsg: string | null = null;
@@ -48,6 +53,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     ngOnInit(): void {
         const currentUser = this.authService.currentUser;
         this.getUserTypes();
+        this.setRequestColumns();
 
         this.searchForm = this.fb.group({
             id: [''],
@@ -116,7 +122,21 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.docSvc.institutionSearchRequests(solicitante, this.userData.Id, inicio, fin)
             .subscribe({
                 next: data => {
-                    this.results = data;
+                    // formateando fechas para la tabla
+                    this.results = data.map(item => {
+                        if (item.documentRequest && item.documentRequest.date) {
+                            const date = new Date(item.documentRequest.date);
+                            const formattedDate = date.toLocaleDateString('es-ES', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            
+                            // se crea copia para no modificar objeto original
+                            return {...item,documentRequest: {...item.documentRequest,date: formattedDate}};
+                        }
+                        return item;
+                    });
                     this.loading = false;
                 },
                 error: err => {
@@ -165,5 +185,25 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
     onDownload(item: SearchDocumentRequestInfo): void {
         window.open(item.privateDocument?.path, '_blank');
+    }
+    
+    setRequestColumns() {
+        this.requestColumns = [
+            { header: 'ID', campo: 'documentRequest.id' },
+            { header: 'Solicitante', campo: 'documentRequest.requesterID' },
+            { header: 'Nombre', campo: 'privateDocument.name' },
+            { header: 'Fecha', campo: 'documentRequest.date' },
+            { header: 'Estado', campo: 'documentRequest.state' },
+            { header: 'Acción', campo: 'actions' }
+        ];
+    }
+    
+    handleTableAction(item: any) {
+        if (item.documentRequest.state === 'UPLOADED') {
+            this.onDownload(item);
+        } 
+        else {
+            this.onStartUpload(item);
+        }
     }
 }
