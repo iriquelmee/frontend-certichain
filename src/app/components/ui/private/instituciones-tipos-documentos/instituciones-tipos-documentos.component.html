@@ -1,52 +1,38 @@
+<div class="grid">
+  <div class="col-12" style="margin-bottom: 1rem;">
+      <p-card>
+              <h2>Tipo Usuario</h2>
+
+              <p>Administre aquí los tipos de documentos.</p>
+      
+              <input pInputText [(ngModel)]="createNombre" type="text" placeholder="Ingrese Tipo Documento" style="margin-top:0.5rem" name="createNombre" />
+      
+              <custom-button 
+                  label="Crear" 
+                  type="primary" 
+                  (onClick)="onCreate()"
+                  style="margin: 0.5rem;">
+              </custom-button>
+      </p-card>
+  </div>
+</div>
+
 <div class="grid" style="margin-bottom: 1rem;">
-    <div class="col-12">
-        <h2>{{ this.title }}</h2>
-    </div>
+  <div class="col-12">
+      <p-card>
+          <div class="grid">
+            @if(filteredTypes.length === 0){
+                <div *ngIf="" class="text-center p-5">
+                    <div class="flex align-items-center justify-content-center flex-column">
+                        <i class="pi pi-info-circle text-5xl mb-3 text-500"></i>
+                        <p class="text-xl text-500 mb-0">No se encontraron registros.</p>
+                    </div>
+                </div>
+            }
+            @else if(filteredTypes.length > 0){
+                <app-table [data]="filteredTypes" [columns]="documentTypeColumns" [showActions]="true" (onToggleActive)="toggleEstado($event)" [rows]="10"></app-table>
+            }
+          </div>
+      </p-card>
+  </div>
 </div>
-
-<div>
-  <!--<form (ngSubmit)="onSearch()">
-    <h3>Buscar Tipo Documento</h3>
-    <div>
-      <label>ID</label>
-      <input type="text" [(ngModel)]="searchId" name="searchId"/>
-    </div>
-    <div>
-      <label>Nombre</label>
-      <input type="text" [(ngModel)]="searchNombre" name="searchNombre"/>
-    </div>
-    <button type="submit">Buscar</button>
-  </form> -->
-
-  <form (ngSubmit)="onCreate()">
-    <h3>Crear Tipo Documento</h3>
-    <div>
-      <label>Nombre Tipo Documento</label>
-      <input type="text" [(ngModel)]="createNombre" name="createNombre"/>
-    </div>
-    <button type="submit">Crear</button>
-  </form>
-</div>
-
-<table class="results-table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre Tipo</th>
-      <th>Estado</th>
-      <th>Acción</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of filteredTypes; let i = index">
-      <td>{{ item.id }}</td>
-      <td>{{ item.name }}</td>
-      <td>{{ item.state }}</td>
-      <td>
-        <a href="#" (click)="toggleEstado(item); $event.preventDefault()">
-          {{ item.state === 'Activo' ? 'Desactivar' : 'Activar' }}
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>

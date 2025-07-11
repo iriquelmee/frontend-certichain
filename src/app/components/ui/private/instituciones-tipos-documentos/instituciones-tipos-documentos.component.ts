@@ -5,10 +5,14 @@ import { DocumentType } from '../../../../models/document-type';
 import { AuthService } from '../../../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TableComponent } from '../../../shared/table/table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonComponent } from '../../../shared/button/button.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-instituciones-tipos-documentos',
-    imports: [CommonModule, FormsModule, CardModule],
+    imports: [CommonModule, FormsModule, CardModule, TableComponent,InputTextModule, ButtonComponent, DatePickerModule],
     templateUrl: './instituciones-tipos-documentos.component.html',
     styleUrl: './instituciones-tipos-documentos.component.scss'
 })
@@ -20,6 +24,7 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
     searchId: string = '';
     searchNombre: string = '';
     createNombre: string = '';
+    documentTypeColumns : any[] = [];
 
     constructor(private documentTypeService: DocumentTypeService,
         private authService: AuthService
@@ -27,6 +32,7 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAll();
+        this.setDocumentTypeColumns();
     }
 
     private loadAll() {
@@ -35,6 +41,7 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
             .subscribe(types => {
                 this.allTypes = types;
                 this.filteredTypes = [...types];
+                console.log("this.filteredTypes",this.filteredTypes);
             });
     }
 
@@ -71,4 +78,13 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
                 this.loadAll();
             });
     }
+
+    setDocumentTypeColumns() {
+        this.documentTypeColumns = [
+            { header: 'ID', campo: 'id' },
+            { header: 'Nombre Tipo', campo: 'name' },
+            { header: 'Estado', campo: 'state' },
+            { header: 'Acción', campo: 'actions' }
+        ];
+    }   
 }
