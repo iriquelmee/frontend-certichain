@@ -7,10 +7,12 @@ import { UserType } from '../../../../models/user-type';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableComponent } from '../../../shared/table/table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonComponent } from '../../../shared/button/button.component';
 
 @Component({
     selector: 'app-admin-categoria',
-    imports: [CommonModule,FormsModule,CardModule,TableComponent],
+    imports: [CommonModule,FormsModule,CardModule,TableComponent, InputTextModule, ButtonComponent],
     templateUrl: './admin-categoria.component.html',
     styleUrl: './admin-categoria.component.scss'
 })

@@ -5,10 +5,13 @@ import { DocumentAuditService } from '../../../../services/audit/document-audit.
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableComponent } from '../../../shared/table/table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonComponent } from '../../../shared/button/button.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-admin-auditoria',
-    imports: [CommonModule, CardModule, FormsModule, TableComponent],
+    imports: [CommonModule, CardModule, FormsModule, TableComponent, InputTextModule, ButtonComponent, DatePickerModule],
     templateUrl: './admin-auditoria.component.html',
     styleUrl: './admin-auditoria.component.scss'
 })

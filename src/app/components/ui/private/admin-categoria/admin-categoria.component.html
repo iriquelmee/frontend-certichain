@@ -1,15 +1,29 @@
+<div class="grid">
+    <div class="col-12" style="margin-bottom: 1rem;">
+        <p-card>
+            
+                <h2>Tipo Usuario</h2>
+
+                <p>Realize y registre aquí un nuevo tipo.</p>
+        
+                <input pInputText [(ngModel)]="newUserTypeName" type="text" placeholder="Ingrese Tipo Usuario" style="margin-top:0.5rem" />
+        
+                <custom-button 
+                    label="Crear" 
+                    type="primary" 
+                    (onClick)="createUserType()"
+                    style="margin: 0.5rem;">
+                </custom-button>
+        
+            
+        </p-card>
+    </div>
+</div>
+
 <div class="grid" style="margin-bottom: 1rem;">
     <div class="col-12">
         <p-card>
             <div class="grid">
-                <div class="col-12">
-                    <h3>Tipo Usuario</h3>
-                    <div class="actions">
-                        <input type="text" [(ngModel)]="newUserTypeName" placeholder="Nombre Tipo Usuario" />
-                        <button (click)="createUserType()">Crear</button>
-                    </div>
-                </div>
-
                 <app-table [data]="userTypes" [columns]="userTypeColumns" [showActions]="true" (onToggleActive)="toggleUserTypeState($event)" [rows]="10"></app-table>
 
                 <div *ngIf="userTypes.length === 0" class="text-center p-5">
@@ -27,12 +41,17 @@
     <div class="col-12">
         <p-card>
             <div class="grid">
-                <div class="col-12">
-                    <h3>Subtipo Usuario</h3>
-                    <div class="actions">
-                        <input type="text" [(ngModel)]="newUserSubTypeName" placeholder="Nombre SubTipo Usuario" />
-                        <button (click)="createUserSubType()">Crear</button>
-                    </div>
+                <div class="col-12" style="margin-bottom: 1rem;">
+                    <h2>Subtipo Usuario</h2>
+
+                    <input pInputText [(ngModel)]="newUserSubTypeName" type="text" placeholder="Ingrese SubTipo Usuario" style="margin-top:0.5rem" />
+
+                    <custom-button 
+                        label="Crear" 
+                        type="primary" 
+                        (onClick)="createUserSubType()"
+                        style="margin: 0.5rem;">
+                    </custom-button>
                 </div>
 
                 <app-table [data]="userSubTypes" [columns]="userSubTypeColumns" [showActions]="true" (onToggleActive)="toggleUserSubTypeState($event)" [rows]="10"></app-table>

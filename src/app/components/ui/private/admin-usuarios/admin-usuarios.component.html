@@ -1,10 +1,13 @@
 <div class="grid" style="margin-bottom: 1rem;">
+    <div class="col-12" style="margin-bottom: 1rem;">
+        <p-card>
+            <h2>Usuarios</h2>
+            <p>Administre aquí los usuarios del sistema.</p>
+        </p-card>
+    </div>
     <div class="col-12">
         <p-card>
             <div class="grid">
-                <div class="col-12">
-                    <h3>Usuarios</h3>
-                </div>
                 <app-table 
                 *ngIf="filteredUsers && filteredUsers.length > 0" 
                 [data]="filteredUsers"

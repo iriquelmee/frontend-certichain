@@ -1,25 +1,33 @@
 <div class="grid">
     <div class="col-12">
         <p-card>
-            <div class="filters">
-                <label>
-                    Emisor:
-                    <input type="text" [(ngModel)]="emisor" placeholder="Emisor" />
-                </label>
-                <label>
-                    Solicitante:
-                    <input type="text" [(ngModel)]="solicitante" placeholder="Solicitante" />
-                </label>
-                <label>
-                    Inicio:
-                    <input type="date" [(ngModel)]="startDate" />
-                </label>
-                <label>
-                    Fin:
-                    <input type="date" [(ngModel)]="endDate" />
-                </label>
-                <button (click)="onSearchClick()">Buscar</button>
+            <div class="col-12">
+                <h2>Auditoria</h2>
+                <p>Realize una busqueda aquí.</p>
             </div>
+            <label>
+                Emisor:
+                <input pInputText [(ngModel)]="emisor" type="text" placeholder="Ingrese Emisor" style="margin-top:0.5rem" />
+            </label>
+            <label>
+                Solicitante:
+                <input pInputText [(ngModel)]="solicitante" type="text" placeholder="Ingrese Solicitante" style="margin-top:0.5rem" />
+            </label>
+            <label>
+                Inicio:
+                <p-datepicker [(ngModel)]="startDate" [iconDisplay]="'input'" [showIcon]="true" placeholder="Seleccione Fecha Inicio"/>
+            </label>
+            <label>
+                Fin:
+                <p-datepicker [(ngModel)]="endDate" [iconDisplay]="'input'" [showIcon]="true" placeholder="Seleccione Fecha Fin"/>
+            </label>
+
+            <custom-button 
+                label="Buscar" 
+                type="primary" 
+                (onClick)="onSearchClick()"
+                style="margin: 0.5rem;">
+            </custom-button>
         </p-card>
     </div>
 </div>
@@ -28,9 +36,6 @@
     <div class="col-6">
         <p-card>
             <div class="grid">
-                <div class="col-12">
-                    <h3>Auditoria</h3>
-                </div>
                 <app-table *ngIf="!loading && logs.length > 0" [data]="logs" [columns]="tableColumns" [rows]="10">
                 </app-table>
                 <div *ngIf="!loading && logs.length === 0" class="text-center p-5">
