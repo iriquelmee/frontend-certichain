@@ -8,6 +8,8 @@ import { TableComponent } from '../../../shared/table/table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { UserDataService } from '../../../../services/userdata/user-data.service';
+import { UserData } from '../../../../models/user-data';
 
 @Component({
     selector: 'app-admin-auditoria',
@@ -29,7 +31,12 @@ export class AdminAuditoriaComponent {
     errorMsg: string | null = null;
     tableColumns: any[] = [];
 
-    constructor(private auditSvc: DocumentAuditService) { }
+    userList: UserData[] = [];
+
+    constructor(
+        private auditSvc: DocumentAuditService,
+        private userDataService: UserDataService
+    ) { }
 
     ngOnInit(): void {
         const now = new Date();
@@ -41,6 +48,20 @@ export class AdminAuditoriaComponent {
 
         this.setTableColumns();
         this.search();
+
+        this.loadUserData();
+    }
+
+    loadUserData() {
+        this.userDataService.getAll().subscribe({
+            next: (data) => {
+                this.userList = data;
+            },
+            error: (err) => {
+                console.error('Error al buscar usuarios:', err);
+                this.userList = [];
+            }
+        })
     }
 
     setTableColumns() {
@@ -104,4 +125,10 @@ export class AdminAuditoriaComponent {
         }
         this.search();
     }
+
+    getUserName(id: string): string {
+        const type = this.userList.find(t => t.userID === id);
+        return type ? type.name : id;
+    }
+
 }

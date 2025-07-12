@@ -36,7 +36,7 @@
     <div class="col-6">
         <p-card>
             <div class="grid">
-                <app-table *ngIf="!loading && logs.length > 0" [data]="logs" [columns]="tableColumns" [rows]="10">
+                <app-table *ngIf="!loading && logs.length > 0" [data]="logs" [columns]="tableColumns" [getUserTypeName]="getUserName.bind(this)" [rows]="10">
                 </app-table>
                 <div *ngIf="!loading && logs.length === 0" class="text-center p-5">
                     <div class="flex align-items-center justify-content-center flex-column">

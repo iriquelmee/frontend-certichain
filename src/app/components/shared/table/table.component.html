@@ -31,16 +31,20 @@
         </ng-container>
         
         <!-- columna especial para tipo de usuario -->
-        <ng-container *ngIf="col.campo === 'userTypeId'">
+        <ng-container *ngIf="col.campo === 'userTypeId' || col.campo === 'institution' || col.campo === 'userId'">
           {{ getUserTypeName(row[col.campo]) }}
         </ng-container>
-        
+
+        <ng-container *ngIf=" col.campo === 'documentRequest.requesterID'">
+          {{ getUserTypeName( col.campo.includes('.') ? getCamposAnidados(row, col.campo) : row[col.campo] ) }}
+        </ng-container>
+
         <!-- columnas normales -->
-        <ng-container *ngIf="label && col.campo.startsWith(label + '.') && col.campo !== 'actions' && col.campo !== 'userTypeId'">
+        <ng-container *ngIf="label && col.campo.startsWith(label + '.') && col.campo !== 'actions' && col.campo !== 'userTypeId' && col.campo !== 'institution' && col.campo !== 'userId' && col.campo !== 'documentRequest.requesterID'">
           {{ getCamposAnidados(row, col.campo.substring(label.length + 1)) }}
         </ng-container>
         
-        <ng-container *ngIf="(!label || !col.campo.startsWith(label + '.')) && col.campo !== 'actions' && col.campo !== 'userTypeId'">
+        <ng-container *ngIf="(!label || !col.campo.startsWith(label + '.')) && col.campo !== 'actions' && col.campo !== 'userTypeId'  && col.campo !== 'institution' && col.campo !== 'userId' && col.campo !== 'documentRequest.requesterID'">
           {{ col.campo.includes('.') ? getCamposAnidados(row, col.campo) : row[col.campo] }}
         </ng-container>
       </td>

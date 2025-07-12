@@ -39,6 +39,8 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     selectedRequest: SearchDocumentRequestInfo | null = null;
     requestColumns: any[] = [];
 
+    userList: UserData[] = [];
+
     loading = false;
     errorMsg: string | null = null;
 
@@ -79,6 +81,19 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         };
 
         this.onSearch();
+        this.loadUserData();
+    }
+
+    loadUserData() {
+        this.userDataService.getAll().subscribe({
+            next: (data) => {
+                this.userList = data;
+            },
+            error: (err) => {
+                console.error('Error al buscar usuarios:', err);
+                this.userList = [];
+            }
+        })
     }
 
     getUserTypes() {
@@ -119,7 +134,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
         const { solicitante, inicio, fin } = this.searchForm.value;
 
-        this.docSvc.institutionSearchRequests(solicitante, this.userData.Id, inicio, fin)
+        this.docSvc.institutionSearchRequests(solicitante, this.userData.Id, inicio.toISOString(), fin.toISOString())
             .subscribe({
                 next: data => {
                     // formateando fechas para la tabla
@@ -205,5 +220,10 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         else {
             this.onStartUpload(item);
         }
+    }
+
+    getUserName(id: string): string {
+        const type = this.userList.find(t => t.userID === id);
+        return type ? type.name : id;
     }
 }
