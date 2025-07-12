@@ -134,9 +134,14 @@ export class InstitucionesSolicitudesComponent implements OnInit {
 
         const { solicitante, inicio, fin } = this.searchForm.value;
 
-        this.docSvc.institutionSearchRequests(solicitante, this.userData.Id, inicio.toISOString(), fin.toISOString())
+        this.docSvc.institutionSearchRequests(
+            solicitante, 
+            this.userData.Id, 
+            inicio instanceof Date ? inicio.toISOString() : undefined, 
+            fin instanceof Date ? fin.toISOString() : undefined)
             .subscribe({
                 next: data => {
+                    console.log(data.toString())
                     // formateando fechas para la tabla
                     this.results = data.map(item => {
                         if (item.documentRequest && item.documentRequest.date) {
