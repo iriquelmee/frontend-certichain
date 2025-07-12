@@ -30,6 +30,10 @@
           </a>
         </ng-container>
         
+        <ng-container *ngIf="col.campo === 'docuView'">
+          <a *ngIf="getCamposAnidados(row, 'documentRequest.state') === 'UPLOADED'" style="margin: 0.5rem;" href="#" class="p-link" (click)="urlHandle(getCamposAnidados(row, 'privateDocument.path')); $event.preventDefault()">Descarga</a>
+        </ng-container>
+        
         <!-- columna especial para tipo de usuario -->
         <ng-container *ngIf="col.campo === 'userTypeId' || col.campo === 'institution' || col.campo === 'userId'">
           {{ getUserTypeName(row[col.campo]) }}

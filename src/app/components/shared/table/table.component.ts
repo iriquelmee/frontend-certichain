@@ -23,6 +23,7 @@ export class TableComponent implements OnInit, OnChanges {
   @Input() tableStyle: { [klass: string]: any } = { width: '100%' };
   @Input() showActions: boolean = false;
   @Input() getUserTypeName: Function = (id: string) => id;
+  @Input() urlHandle: Function = (url: string) => url;
 
   @Output() onPageChange = new EventEmitter<any>();
   @Output() onEdit = new EventEmitter<any>();

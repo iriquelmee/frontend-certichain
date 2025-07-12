@@ -83,7 +83,7 @@
                         </div>
                     </ng-template>
                     <div class="p-4">
-                        <app-table *ngIf="documentos && documentos.length > 0" [data]="documentos" [columns]="tableColumns" [rows]="5" label="documentos"></app-table>
+                        <app-table *ngIf="documentos && documentos.length > 0" [data]="documentos" [columns]="tableColumns" [showActions]="true" [urlHandle]="openDocument.bind(this)" [rows]="5" label="documentos"></app-table>
                         
                         <div *ngIf="!documentos || documentos.length === 0" class="text-center p-5">
                             <div class="flex align-items-center justify-content-center flex-column">
