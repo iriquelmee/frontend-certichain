@@ -14,6 +14,7 @@ import { TableComponent } from '../../../shared/table/table.component';
 import { SelectComponent } from '../../../shared/select/select.component';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastService } from '../../../../services/shared/toast.service';
 @Component({
     selector: 'app-admin-usuarios',
     imports: [CommonModule,ReactiveFormsModule,CardModule,TableComponent,SelectComponent,ButtonComponent,InputTextModule],
@@ -38,7 +39,8 @@ export class AdminUsuariosComponent {
         private userDataService: UserDataService,
         private authService: AuthService,
         private userSubTypeService: UserSubTypeService,
-        private userTypeService: UserTypeService
+        private userTypeService: UserTypeService,
+        private toastService: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -56,8 +58,10 @@ export class AdminUsuariosComponent {
                 this.tipos = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'
                 );
+                this.toastService.info('Tipos de Usuario', 'Tipos de usuario cargados correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al obtener tipos de usuarios: ' + err.message);
                 console.error('Error al obtener tipos de usuarios:', err);
             }
         })
@@ -66,8 +70,10 @@ export class AdminUsuariosComponent {
                 this.subtipos = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'
                 );
+                this.toastService.info('Subtipos de Usuario', 'Subtipos de usuario cargados correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al obtener subtipos de usuarios: ' + err.message);
                 console.error('Error al obtener subtipos de usuarios:', err);
             }
         })
@@ -80,8 +86,10 @@ export class AdminUsuariosComponent {
                 this.filteredUsers = data;
                 console.log("this.filteredUsers", this.filteredUsers);
                 this.setTableColumnsHeaders();
+                this.toastService.success('Usuarios', 'Datos de usuarios cargados correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al buscar usuarios: ' + err.message);
                 console.error('Error al buscar usuarios:', err);
                 this.filteredUsers = [];
             }
@@ -92,9 +100,11 @@ export class AdminUsuariosComponent {
         if (updated.id) {
             this.userDataService.update(updated.id, updated).subscribe({
                 next: (data) => {
+                    this.toastService.success('Éxito', 'Usuario actualizado correctamente');
                     this.loadUserData();
                 },
                 error: (err) => {
+                    this.toastService.error('Error', 'Error al actualizar usuario: ' + err.message);
                     console.error('Error al actualizar usuarios:', err);
                     return;
                 }
@@ -105,6 +115,7 @@ export class AdminUsuariosComponent {
     onSearch(): void {
         const nombre = this.searchForm.value;
         this.filteredUsers = this.filteredUsers.filter(u => u.name.toLowerCase().includes(nombre.toLowerCase()) );
+        this.toastService.info('Búsqueda', `Se encontraron ${this.filteredUsers.length} usuarios`);
     }
 
     onEdit(user: UserData): void {
@@ -116,6 +127,7 @@ export class AdminUsuariosComponent {
             activo: this.selectedUser.status === 'Activo'
         });
         this.editForm.get('nombre')!.disable();
+        this.toastService.info('Edición', `Editando usuario: ${user.name}`);
     }
 
     onToggleActive(user: UserData): void {
@@ -124,7 +136,12 @@ export class AdminUsuariosComponent {
     }
 
     onApplyChanges(): void {
-        if (!this.selectedUser || this.editForm.invalid) return;
+        if (!this.selectedUser || this.editForm.invalid) {
+            if (this.editForm.invalid) {
+                this.toastService.warning('Advertencia', 'Por favor complete todos los campos requeridos');
+            }
+            return;
+        }
         const cambios = this.editForm.getRawValue();
         this.selectedUser.userSubTypeId = cambios.subtipo;
         this.selectedUser.userTypeId = cambios.tipo;
@@ -135,6 +152,7 @@ export class AdminUsuariosComponent {
     cancelEdit(): void {
         this.selectedUser = null;
         this.editForm.reset();
+        this.toastService.info('Cancelado', 'Edición cancelada');
     }
 
     getUserTypeName(id: string): string {
