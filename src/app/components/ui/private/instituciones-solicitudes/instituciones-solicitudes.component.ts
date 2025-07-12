@@ -16,11 +16,12 @@ import { TableComponent } from '../../../shared/table/table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { FileUploadModule } from 'primeng/fileupload';
 import { ToastService } from '../../../../services/shared/toast.service';
 
 @Component({
     selector: 'app-instituciones-solicitudes',
-    imports: [CardModule, CommonModule, ReactiveFormsModule, FormsModule, TableComponent, InputTextModule, ButtonComponent, DatePickerModule],
+    imports: [CardModule, CommonModule, ReactiveFormsModule, FormsModule, TableComponent, InputTextModule, ButtonComponent, DatePickerModule, FileUploadModule],
     templateUrl: './instituciones-solicitudes.component.html',
     styleUrl: './instituciones-solicitudes.component.scss'
 })
@@ -185,10 +186,9 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         });
     }
 
-    onFileChange(ev: Event) {
-        const input = ev.target as HTMLInputElement;
-        if (input.files && input.files.length) {
-            this.uploadForm.patchValue({ file: input.files[0] });
+    onFileChange(ev: any) {
+        if (ev.files && ev.files.length) {
+            this.uploadForm.patchValue({ file: ev.files[0] });
         }
     }
 

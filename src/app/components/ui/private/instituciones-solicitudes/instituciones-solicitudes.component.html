@@ -4,34 +4,8 @@
             <div class="col-12">
                 <h2>{{ this.title }}</h2>
             </div>
-        
-            <div *ngIf="selectedRequest" class="upload-panel">
-                <h3>Cargar documento</h3>
-                <form [formGroup]="uploadForm" (ngSubmit)="onUploadSubmit()">
-                    <div>
-                        <label>ID Registro</label>
-                        <input formControlName="requestId" readonly />
-                    </div>
-                    <div>
-                        <label>Solicitante</label>
-                        <input formControlName="requesterId" readonly />
-                    </div>
-                    <div>
-                        <label>Tipo Documento</label>
-                        <input formControlName="documentTypeId" readonly />
-                    </div>
-                    <div>
-                        <label>Archivo</label>
-                        <input type="file" (change)="onFileChange($event)" />
-                    </div>
-                    <div class="buttons">
-                        <button type="submit" [disabled]="uploadForm.invalid">Enviar</button>
-                        <button type="button" (click)="onCancelUpload()">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        
-            <div class="col-8">
+
+            <div class="col-12">
                 <form [formGroup]="searchForm" class="search-form">
                     <div class="fields">
                         <label>
@@ -68,6 +42,58 @@
                     </div>
                 </form>
         
+            </div>
+        </p-card>
+    </div>
+
+    <div *ngIf="selectedRequest" class="col-12">
+        <p-card>
+            <div class="upload-panel p-fluid" style="border-radius: 0.8rem;">
+                <h2>Cargar documento</h2>
+                <form [formGroup]="uploadForm" (ngSubmit)="onUploadSubmit()" style="margin-top: 0.5rem;">
+                    <div class="grid">
+                        <div class="col-12 md:col-4 mb-2" style="margin-top: 0.5rem;">
+                            <label for="requestId" class="block mb-1">ID Registro</label>
+                            <input id="requestId" pInputText formControlName="requestId" readonly class="w-full" />
+                        </div>
+                        <div class="col-12 md:col-4 mb-2" style="margin-top: 0.5rem;">
+                            <label for="requesterId" class="block mb-1">Solicitante</label>
+                            <input id="requesterId" pInputText formControlName="requesterId" readonly class="w-full" />
+                        </div>
+                        <div class="col-12 md:col-4 mb-2" style="margin-top: 0.5rem;">
+                            <label for="documentTypeId" class="block mb-1">Tipo Documento</label>
+                            <input id="documentTypeId" pInputText formControlName="documentTypeId" readonly class="w-full" />
+                        </div>
+                        <div class="col-12 md:col-4 mb-2" style="margin-top: 0.5rem;">
+                            <p-fileUpload  
+                                id="fileUpload"
+                                mode="basic" 
+                                name="document" 
+                                [auto]="false"
+                                chooseLabel="Subir"
+                                class="w-full" 
+                                accept="application/pdf,image/*"
+                                (onSelect)="onFileChange($event)"
+                                [showCancelButton]="false">
+                            </p-fileUpload>                          
+                        </div>
+                        <div class="col-12">
+                            <custom-button
+                            style="margin: 0.5rem;" 
+                            label="Cancelar" 
+                            type="danger" 
+                            (onClick)="onCancelUpload()">
+                        </custom-button>
+                            <custom-button
+                                style="margin: 0.5rem;"
+                                label="Enviar" 
+                                type="primary" 
+                                [disabled]="uploadForm.invalid"
+                                (onClick)="onUploadSubmit()">
+                            </custom-button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </p-card>
     </div>
