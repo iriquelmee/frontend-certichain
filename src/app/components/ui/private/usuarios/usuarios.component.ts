@@ -8,10 +8,11 @@ import { AuthState } from '../../../../models/user.model';
 import { Subscription } from 'rxjs';
 import { SearchDocumentRequestInfo } from '../../../../models/search-document-request-info';
 import { CommonModule } from '@angular/common';
+import { UsuariosInformacionComponent } from '../usuarios-informacion/usuarios-informacion.component';
 
 @Component({
     selector: 'app-usuarios',
-    imports: [CommonModule,CardModule, TabComponent],
+    imports: [CommonModule,CardModule, TabComponent, UsuariosInformacionComponent],
     templateUrl: './usuarios.component.html',
     styleUrl: './usuarios.component.scss'
 })
