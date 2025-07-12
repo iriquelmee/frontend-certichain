@@ -9,6 +9,7 @@ import { TableComponent } from '../../../shared/table/table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ToastService } from '../../../../services/shared/toast.service';
 
 @Component({
     selector: 'app-instituciones-tipos-documentos',
@@ -27,7 +28,8 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
     documentTypeColumns : any[] = [];
 
     constructor(private documentTypeService: DocumentTypeService,
-        private authService: AuthService
+        private authService: AuthService,
+        private toastService: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -38,10 +40,17 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
     private loadAll() {
         this.userId = this.authService.currentUser?.id || '';
         this.documentTypeService.getByUserId(this.userId)
-            .subscribe(types => {
-                this.allTypes = types;
-                this.filteredTypes = [...types];
-                console.log("this.filteredTypes",this.filteredTypes);
+            .subscribe({
+                next: types => {
+                    this.allTypes = types;
+                    this.filteredTypes = [...types];
+                    console.log("this.filteredTypes",this.filteredTypes);
+                    this.toastService.success('Tipos de Documentos', 'Tipos de documentos cargados correctamente');
+                },
+                error: err => {
+                    this.toastService.error('Error', 'Error al cargar tipos de documentos: ' + err.message);
+                    console.error('Error al cargar tipos de documentos:', err);
+                }
             });
     }
 
@@ -52,30 +61,64 @@ export class InstitucionesTiposDocumentosComponent implements OnInit {
             (!id || t.id?.includes(id)) &&
             (!nombre || t.name.toLowerCase().includes(nombre))
         );
+        
+        const resultCount = this.filteredTypes.length;
+        this.toastService.info('Búsqueda', `Se encontraron ${resultCount} tipos de documentos`);
     }
 
     onCreate(): void {
         const nombre = this.createNombre.trim();
-        if (!nombre && !this.userId) return;
+        if (!nombre) {
+            this.toastService.warning('Advertencia', 'Debe ingresar un nombre para el tipo de documento');
+            return;
+        }
+        
+        if (!this.userId) {
+            this.toastService.error('Error', 'No se puede identificar el usuario actual');
+            return;
+        }
+        
         const newDocumentType: DocumentType = {
             id: '',
             userID: this.userId,
             name: nombre,
             state: 'Activo'
         }
+        
         this.documentTypeService.create(newDocumentType)
-            .subscribe(() => {
-                this.createNombre = '';
-                this.loadAll();
+            .subscribe({
+                next: () => {
+                    this.toastService.success('Éxito', `Tipo de documento "${nombre}" creado correctamente`);
+                    this.createNombre = '';
+                    this.loadAll();
+                },
+                error: err => {
+                    this.toastService.error('Error', `Error al crear tipo de documento: ${err.message}`);
+                    console.error('Error al crear tipo de documento:', err);
+                }
             });
     }
 
     toggleEstado(item: DocumentType): void {
-        if (!item.id) return;
-        item.state = item.state === 'Activo' ? 'Inactivo' : 'Activo';
+        if (!item.id) {
+            this.toastService.warning('Advertencia', 'ID de documento no válido');
+            return;
+        }
+        
+        const nuevoEstado = item.state === 'Activo' ? 'Inactivo' : 'Activo';
+        item.state = nuevoEstado;
+        
         this.documentTypeService.update(item.id, item)
-            .subscribe(() => {
-                this.loadAll();
+            .subscribe({
+                next: () => {
+                    this.toastService.success('Estado Actualizado', `Tipo de documento "${item.name}" cambiado a "${nuevoEstado}"`);
+                    this.loadAll();
+                },
+                error: err => {
+                    this.toastService.error('Error', `Error al actualizar estado: ${err.message}`);
+                    console.error('Error al actualizar estado:', err);
+                    item.state = item.state === 'Activo' ? 'Inactivo' : 'Activo';
+                }
             });
     }
 

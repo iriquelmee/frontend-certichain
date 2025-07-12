@@ -17,6 +17,7 @@ import { SelectComponent } from '../../../shared/select/select.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ToastService } from '../../../../services/shared/toast.service';
 
 @Component({
     selector: 'app-instituciones-otras-solicitudes',
@@ -51,7 +52,8 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
         private authService: AuthService,
         private userTypeService: UserTypeService,
         private userDataService: UserDataService,
-        private documentTypeServcie: DocumentTypeService
+        private documentTypeServcie: DocumentTypeService,
+        private toastService: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -94,9 +96,11 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
                 this.tipos = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'
                 );
+                this.toastService.info('Tipos de usuario', 'Tipos de usuario cargados correctamente');
                 this.getInstitutions()
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al obtener tipos de usuarios: ' + err.message);
                 console.error('Error al obtener tipos de usuarios:', err);
             }
         })
@@ -106,8 +110,10 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
         this.userDataService.getByUserTypeId(this.getInstitutionID()).subscribe({
             next: (data) => {
                 this.institutions = data;
+                this.toastService.info('Instituciones', 'Instituciones cargadas correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al buscar instituciones: ' + err.message);
                 console.error('Error al buscar instituciones:', err);
                 this.institutions = [];
             }
@@ -116,15 +122,19 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
 
     getInstitutionDocTypes(){
         if (!this.requestForm.value.institution) {
+            this.toastService.warning('Advertencia', 'Debe seleccionar una institución primero');
             return;
         }
+        
         this.documentTypeServcie.getByUserId(this.requestForm.value.institution).subscribe({
             next: (data) => {
                 this.documentsType = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'
-                );;
+                );
+                this.toastService.info('Tipos de documentos', 'Tipos de documentos de la institución cargados correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al cargar tipos de documentos: ' + err.message);
                 console.error('Error al buscar instituciones:', err);
                 this.documentsType = [];
             }
@@ -132,6 +142,16 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
     }
 
     onSolicitar() {
+        if (!this.requestForm.value.institution) {
+            this.toastService.warning('Advertencia', 'Debe seleccionar una institución');
+            return;
+        }
+        
+        if (!this.requestForm.value.documentType) {
+            this.toastService.warning('Advertencia', 'Debe seleccionar un tipo de documento');
+            return;
+        }
+        
         const dto: DocumentRequest = {
             id: null,
             requesterID: this.userData.Id,
@@ -140,11 +160,17 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
             documentTypeID: this.requestForm.value.documentType,
             state: null
         };
-        this.docSvc.createRequest(dto).subscribe(res => {
-            alert(`Solicitud creada con ID ${res.id}`);
-            this.requestForm.reset();
-            this.searchForm.reset();
-            this.onSearch();
+        this.docSvc.createRequest(dto).subscribe({
+            next: (res) => {
+                this.toastService.success('Solicitud creada', `Solicitud creada con ID ${res.id}`);
+                this.requestForm.reset();
+                this.searchForm.reset();
+                this.onSearch();
+            },
+            error: (err) => {
+                this.toastService.error('Error', 'Error al crear la solicitud: ' + err.message);
+                console.error('Error al crear solicitud:', err);
+            }
         });
     }
 
@@ -177,10 +203,12 @@ export class InstitucionesOtrasSolicitudesComponent implements OnInit {
                         return item;
                     });
                     this.loading = false;
+                    this.toastService.success('Búsqueda', 'Búsqueda realizada correctamente');
                 },
                 error: err => {
                     this.errorMsg = err.message || 'Error al buscar.';
                     this.loading = false;
+                    this.toastService.error('Error', this.errorMsg || '');
                 }
             });
     }

@@ -16,6 +16,7 @@ import { TableComponent } from '../../../shared/table/table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../shared/button/button.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ToastService } from '../../../../services/shared/toast.service';
 
 @Component({
     selector: 'app-instituciones-solicitudes',
@@ -49,7 +50,8 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         private docSvc: DocumentServiceService,
         private authService: AuthService,
         private userTypeService: UserTypeService,
-        private userDataService: UserDataService
+        private userDataService: UserDataService,
+        private toastService: ToastService
     ) { }
 
     ngOnInit(): void {
@@ -88,8 +90,10 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.userDataService.getAll().subscribe({
             next: (data) => {
                 this.userList = data;
+                this.toastService.success('Usuarios', 'Datos de usuarios cargados correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al buscar usuarios: ' + err.message);
                 console.error('Error al buscar usuarios:', err);
                 this.userList = [];
             }
@@ -102,9 +106,11 @@ export class InstitucionesSolicitudesComponent implements OnInit {
                 this.tipos = data.filter(item =>
                     item.state?.toLowerCase() === 'activo'
                 );
+                this.toastService.info('Tipos de usuario', 'Tipos de usuario cargados correctamente');
                 this.getInstitutions()
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al obtener tipos de usuarios: ' + err.message);
                 console.error('Error al obtener tipos de usuarios:', err);
             }
         })
@@ -114,8 +120,10 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.userDataService.getByUserTypeId(this.getInstitutionID()).subscribe({
             next: (data) => {
                 this.institutions = data;
+                this.toastService.info('Instituciones', 'Instituciones cargadas correctamente');
             },
             error: (err) => {
+                this.toastService.error('Error', 'Error al buscar instituciones: ' + err.message);
                 console.error('Error al buscar instituciones:', err);
                 this.institutions = [];
             }
@@ -158,10 +166,12 @@ export class InstitucionesSolicitudesComponent implements OnInit {
                         return item;
                     });
                     this.loading = false;
+                    this.toastService.success('Búsqueda', 'Búsqueda realizada correctamente');
                 },
                 error: err => {
                     this.errorMsg = err.message || 'Error al buscar.';
                     this.loading = false;
+                    this.toastService.error('Error', this.errorMsg || '');
                 }
             });
     }
@@ -188,12 +198,12 @@ export class InstitucionesSolicitudesComponent implements OnInit {
         this.docSvc.uploadDocument(this.selectedRequest.documentRequest.id, this.uploadForm.value.file)
             .subscribe({
                 next: () => {
-                    alert('Carga exitosa');
+                    this.toastService.success('Éxito', 'Documento cargado correctamente');
                     this.selectedRequest = null;
                     this.uploadForm.reset();
                 },
                 error: err => {
-                    alert(`Error al cargar: ${err.message}`);
+                    this.toastService.error('Error', `Error al cargar el documento: ${err.message}`);
                 }
             });
     }
@@ -201,10 +211,12 @@ export class InstitucionesSolicitudesComponent implements OnInit {
     onCancelUpload(): void {
         this.selectedRequest = null;
         this.uploadForm.reset();
+        this.toastService.info('Cancelado', 'Proceso de carga cancelado');
     }
 
     onDownload(item: SearchDocumentRequestInfo): void {
         window.open(item.privateDocument?.path, '_blank');
+        this.toastService.info('Descarga', 'Iniciando descarga del documento');
     }
     
     setRequestColumns() {
