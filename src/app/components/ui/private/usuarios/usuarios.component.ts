@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
-import { TabComponent } from '../../shared/tab/tab.component';
 import { tabsUsuarios } from '../../../../../data';
 import { DocumentServiceService } from '../../../../services/document/document-service.service';
 import { AuthService } from '../../../../services/auth/auth.service';
@@ -12,7 +11,7 @@ import { UsuariosInformacionComponent } from '../usuarios-informacion/usuarios-i
 
 @Component({
     selector: 'app-usuarios',
-    imports: [CommonModule,CardModule, TabComponent, UsuariosInformacionComponent],
+    imports: [CommonModule,CardModule, UsuariosInformacionComponent],
     templateUrl: './usuarios.component.html',
     styleUrl: './usuarios.component.scss'
 })

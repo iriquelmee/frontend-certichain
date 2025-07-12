@@ -98,10 +98,12 @@ export class AdminAuditoriaComponent {
             filterValue = this.documentId;
         } else if (this.emisor) {
             filterType = 'institution';
-            filterValue = this.emisor;
+            const user = this.userList.find(t => t.userID === this.emisor || t.name === this.emisor);
+            filterValue = user?.userID || '';
         } else if (this.solicitante) {
             filterType = 'userId';
-            filterValue = this.solicitante;
+            const user = this.userList.find(t => t.userID === this.solicitante || t.name === this.solicitante);
+            filterValue = user?.userID || '';
         }
 
         const start = this.toRfc3339(this.startDate);
