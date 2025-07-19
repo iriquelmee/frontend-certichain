@@ -23,10 +23,11 @@
     <tr>
       <td *ngFor="let col of columns">
         <!-- columna especial para acciones -->
-        <ng-container *ngIf="showActions && col.campo === 'actions'">
+        <ng-container *ngIf="showActions && ( col.campo === 'actions' || col.campo === 'institutionActions')">
           <a *ngIf="label === 'usuario'" style="margin: 0.5rem;" href="#" class="p-link" (click)="handleEdit(row); $event.preventDefault()">Editar</a>
           <a style="margin: 0.5rem;" href="#" class="p-link" (click)="handleToggleActive(row); $event.preventDefault()">
-            {{ (row.status === 'Activo' || row.state === 'Activo' ? 'Desactivar' : 'Activar') }}
+            <span *ngIf="col.campo === 'actions'">{{ (row.status === 'Activo' || row.state === 'Activo' ? 'Desactivar' : 'Activar') }}</span>
+            <span *ngIf="col.campo === 'institutionActions'">{{ (getCamposAnidados(row,'documentRequest.state') === 'CREATED' ? 'Cargar' : 'Descargar') }}</span>
           </a>
         </ng-container>
         

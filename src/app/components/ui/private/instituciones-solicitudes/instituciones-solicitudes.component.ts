@@ -226,7 +226,7 @@ export class InstitucionesSolicitudesComponent implements OnInit {
             { header: 'Nombre', campo: 'privateDocument.name' },
             { header: 'Fecha', campo: 'documentRequest.date' },
             { header: 'Estado', campo: 'documentRequest.state' },
-            { header: 'Acción', campo: 'actions' }
+            { header: 'Acción', campo: 'institutionActions' }
         ];
     }
     
